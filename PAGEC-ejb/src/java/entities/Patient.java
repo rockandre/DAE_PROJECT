@@ -41,7 +41,6 @@ public class Patient implements Serializable {
     private String name;
     @ManyToOne
     @JoinColumn(name = "CAREGIVER_USERNAME")
-    @NotNull
     private Caregiver caregiver;
     
     @ManyToMany(mappedBy = "patients")
@@ -52,10 +51,9 @@ public class Patient implements Serializable {
         needs = new LinkedList<>();
     }
     
-    public Patient(int id, String name, Caregiver caregiver){
+    public Patient(int id, String name){
         this.id = id;
         this.name = name;
-        this.caregiver = caregiver;
         needs = new LinkedList<>();
     }
 
