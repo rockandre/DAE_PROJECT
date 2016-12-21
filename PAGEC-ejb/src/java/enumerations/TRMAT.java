@@ -9,9 +9,12 @@ package enumerations;
  *
  * @author joaop
  */
-public enum GROUP {
-    Administrator,
-    HealthcareProf,
-    Caregiver
+public enum TRMAT {
+    TEXT,
+    TURORIAL,
+    VIDEO,
+    QUESTIONARIO,
+    PROCEDURE,
+    OTHER
     
 }
