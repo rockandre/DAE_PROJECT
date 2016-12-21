@@ -15,7 +15,7 @@ import javax.persistence.PersistenceContext;
 import javax.validation.ConstraintViolationException;
 
 @Stateless
-public class PatientBean {
+public class NeedBean {
 
     @PersistenceContext
     private EntityManager em;
@@ -23,11 +23,11 @@ public class PatientBean {
     public void create(int id, String name)
             throws EntityAlreadyExistsException, MyConstraintViolationException {
         try {
-            if (em.find(Patient.class, id) != null) {
-                throw new EntityAlreadyExistsException("A patient with that id already exists.");
+            if (em.find(Need.class, id) != null) {
+                throw new EntityAlreadyExistsException("A need with that id already exists.");
             }
 
-            em.persist(new Patient(id, name));
+            em.persist(new Need(id, name));
 
         } catch (EntityAlreadyExistsException e) {
             throw e;
@@ -38,10 +38,10 @@ public class PatientBean {
         }
     }
 
-    public List<Patient> getAll() {
+    public List<Need> getAll() {
         try {
-            List<Patient> patients = (List<Patient>) em.createNamedQuery("getAllPatients").getResultList();
-            return patients;
+            List<Need> needs = (List<Need>) em.createNamedQuery("getAllNeeds").getResultList();
+            return needs;
         } catch (Exception e) {
             throw new EJBException(e.getMessage());
         }
@@ -50,12 +50,12 @@ public class PatientBean {
     public void remove(int id) throws EntityDoesNotExistsException {
 
         try {
-            Patient patient = em.find(Patient.class, id);
-            if (patient == null) {
+            Need need = em.find(Need.class, id);
+            if (need == null) {
                 throw new EntityDoesNotExistsException("There is no patient with that id");
             }
 
-            em.remove(patient);
+            em.remove(need);
 
         } catch (EntityDoesNotExistsException e) {
             throw e;
@@ -63,11 +63,12 @@ public class PatientBean {
             throw new EJBException(e.getMessage());
         }
     }
-    
-    public void enrollNeed(int patientId, int needId) {
-            
+    /*
+    public void enrollNeed(String username, int needId) 
+            throws EntityDoesNotExistsException{
         try {
-            Patient patient = em.find(Patient.class, patientId);
+
+            Patient patient = em.find(Patient.class, username);
             if (patient == null) {
                 throw new EntityDoesNotExistsException("There is no patient with that username.");
             }
@@ -77,24 +78,25 @@ public class PatientBean {
                 throw new EntityDoesNotExistsException("There is no need with that code.");
             }
 
-            if (patient.getNeeds().contains(need)) {
-                return;//throw new Exception("Patient's course has no such need.");
+            if (!patient.getNeeds().contains(need)) {
+                throw new Exception("Patient's course has no such need.");
             }
 
             if (need.getPatients().contains(patient)) {
-                return;//throw new Exception("Patient is already enrolled in that need.");
+                throw new Exception("Patient is already enrolled in that need.");
             }
 
             need.addPatient(patient);
             patient.addNeed(need);
 
-        
+        } catch (EntityDoesNotExistsException e) {
+            throw e;
         } catch (Exception e) {
             throw new EJBException(e.getMessage());
         }
     }
-    /*
-    public void unrollPatient(int id, int needId) 
+
+    public void unrollPatient(String username, int needId) 
             throws EntityDoesNotExistsException {
         try {
             Need need = em.find(Need.class, needId);
@@ -102,7 +104,7 @@ public class PatientBean {
                 throw new EntityDoesNotExistsException("There is no need with that code.");
             }            
             
-            Patient patient = em.find(Patient.class, id);
+            Patient patient = em.find(Patient.class, username);
             if(patient == null){
                 throw new EntityDoesNotExistsException("There is no patient with that username.");
             }
@@ -120,6 +122,5 @@ public class PatientBean {
             throw new EJBException(e.getMessage());
         }
     }
-*/
-    
+    */
 }
