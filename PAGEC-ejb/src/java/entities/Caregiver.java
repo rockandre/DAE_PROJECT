@@ -11,6 +11,7 @@ import java.util.LinkedList;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 
@@ -19,7 +20,10 @@ import javax.persistence.OneToMany;
  * @author joaop
  */
 @Entity
-@NamedQuery(name = "getAllCaregivers", query = "SELECT t FROM Caregiver t ORDER BY t.name")
+@NamedQueries({
+    @NamedQuery(name = "getAllCaregivers", query = "SELECT t FROM Caregiver t ORDER BY t.name"),
+    @NamedQuery(name = "searchCaregivers", query = "SELECT t FROM Caregiver t WHERE t.name LIKE :name")
+})
 public class Caregiver extends User implements Serializable {
 
     @OneToMany(mappedBy = "caregiver", cascade = CascadeType.REMOVE)

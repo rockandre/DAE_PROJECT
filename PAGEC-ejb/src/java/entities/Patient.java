@@ -98,5 +98,4 @@ public class Patient implements Serializable {
     public void removeNeed(Need need) {
         needs.remove(need);
     }
-    
 }
