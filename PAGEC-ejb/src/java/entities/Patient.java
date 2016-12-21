@@ -10,6 +10,9 @@ import java.util.LinkedList;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
@@ -36,9 +39,12 @@ public class Patient implements Serializable {
     private int id;
     @NotNull (message = "Patient name must not be empty")
     private String name;
+    @ManyToOne
+    @JoinColumn(name = "CAREGIVER_USERNAME")
     @NotNull
     private Caregiver caregiver;
     
+    @ManyToMany(mappedBy = "patients")
     private List<Need> needs;
 
     
@@ -53,5 +59,44 @@ public class Patient implements Serializable {
         needs = new LinkedList<>();
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Caregiver getCaregiver() {
+        return caregiver;
+    }
+
+    public void setCaregiver(Caregiver caregiver) {
+        this.caregiver = caregiver;
+    }
+
+    public List<Need> getNeeds() {
+        return needs;
+    }
+
+    public void setNeeds(List<Need> needs) {
+        this.needs = needs;
+    }
+    
+    public void addNeed(Need need) {
+        needs.add(need);
+    }
+
+    public void removeNeed(Need need) {
+        needs.remove(need);
+    }
     
 }
