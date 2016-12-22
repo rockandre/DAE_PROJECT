@@ -1,5 +1,6 @@
 package ejbs;
 
+import enumerations.TRMAT;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.ejb.Singleton;
@@ -15,11 +16,12 @@ public class ConfigBean {
     private PatientBean patientBean;
     @EJB
     private NeedBean needBean;
-    //@EJB
-    //private AdministratorBean administratorBean;
     
     @EJB
     private CaregiverBean caregiverBean;
+    
+    @EJB
+    private TrainingMaterialBean trainingMaterialBean;
 
     @PostConstruct
     public void populateBD() {
@@ -39,8 +41,11 @@ public class ConfigBean {
             
             caregiverBean.enrollPatient("11111", 1);
             
-            caregiverBean.unrollPatient("11111", 1);
-            patientBean.unrollNeed(1, 1);
+            trainingMaterialBean.create(1, "Respiracao boca a boca", "Suporte Basico de Vida", TRMAT.VIDEO);
+            
+            needBean.enrollTrainingMaterial(1, 1);
+            
+            needBean.unrollPatient(1, 1);
 
         } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());
