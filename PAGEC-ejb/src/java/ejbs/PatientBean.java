@@ -93,8 +93,8 @@ public class PatientBean {
             throw new EJBException(e.getMessage());
         }
     }
-    /*
-    public void unrollPatient(int id, int needId) 
+    
+    public void unrollNeed(int id, int needId) 
             throws EntityDoesNotExistsException {
         try {
             Need need = em.find(Need.class, needId);
@@ -120,6 +120,6 @@ public class PatientBean {
             throw new EJBException(e.getMessage());
         }
     }
-*/
+
     
 }
