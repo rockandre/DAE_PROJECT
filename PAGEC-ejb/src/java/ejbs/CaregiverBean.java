@@ -86,8 +86,7 @@ public class CaregiverBean {
         }
     } 
     
-    public void enrollCaregiver(String username, int patientId) 
-            throws EntityDoesNotExistsException{
+    public void enrollPatient(String username, int patientId){
         try {
             Caregiver caregiver = em.find(Caregiver.class, username);
             if (caregiver == null) {
@@ -99,8 +98,8 @@ public class CaregiverBean {
                 throw new EntityDoesNotExistsException("There is no patient with that ID.");
             }
 
-            if (!patient.getCaregiver().equals(caregiver)) {
-                throw new Exception("Patient has no such caregiver.");
+            if (patient.getCaregiver() != null) {
+                throw new Exception("Patient already has a caregiver.");
             }
 
             if (caregiver.getPatients().contains(patient)) {
@@ -109,16 +108,13 @@ public class CaregiverBean {
 
             caregiver.addPatient(patient);
             patient.setCaregiver(caregiver);
-            
-        } catch (EntityDoesNotExistsException e) {
-            throw e;
+        
         } catch (Exception e) {
             throw new EJBException(e.getMessage());
         }
     }
     
-    public void unrollCaregiver(String username, int patientId) 
-            throws EntityDoesNotExistsException {
+    public void unrollPatient(String username, int patientId) {
         try {
             Patient patient = em.find(Patient.class, patientId);
             if(patient == null){
@@ -130,19 +126,17 @@ public class CaregiverBean {
                 throw new EntityDoesNotExistsException("There is no Caregiver with that username.");
             }
             
-            if(!patient.getCaregiver().equals(caregiver)){
-                throw new Exception();
+            if(patient.getCaregiver() == null){
+                throw new Exception("Already has no Caregiver.");
             }
 
             if(!caregiver.getPatients().contains(patient)) {
-                throw new Exception();
+                throw new Exception("Caregiver has no such Patient.");
             }
             
             patient.removeCaregiver();
             caregiver.removePatient(patient);
-            
-        } catch (EntityDoesNotExistsException  e) {
-            throw e;             
+                       
         } catch (Exception e) {
             throw new EJBException(e.getMessage());
         }
