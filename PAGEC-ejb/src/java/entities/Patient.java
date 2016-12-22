@@ -45,7 +45,6 @@ public class Patient implements Serializable {
     
     @ManyToMany(mappedBy = "patients")
     private List<Need> needs;
-
     
     public Patient(){
         needs = new LinkedList<>();
@@ -97,4 +96,7 @@ public class Patient implements Serializable {
         needs.remove(need);
     }
     
+    public void removeCaregiver() {
+        this.caregiver = null;
+    }
 }
