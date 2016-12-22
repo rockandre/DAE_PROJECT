@@ -25,8 +25,6 @@ public class ConfigBean {
     public void populateBD() {
 
         try {
-
-
             administratorBean.create("a1", "a1", "a1", "a1@ipleiria.pt");
             
             patientBean.create(1, "Zé");
@@ -34,14 +32,13 @@ public class ConfigBean {
             
             patientBean.enrollNeed(1, 1);
 
-            
             caregiverBean.create("11111", "123456789", "André", "1111@11111.com");
             caregiverBean.create("11121", "123456789", "João", "1141@11111.com");
             caregiverBean.create("11131", "123456789", "Rodrigo", "1131@11111.com");
             caregiverBean.create("11141", "123456789", "Jaquim", "1121@11111.com");
             
-            caregiverBean.searchCaregiver("João");
-            
+            caregiverBean.enrollPatient("11111", 1);
+            caregiverBean.unrollPatient("11111", 1);
 
         } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());
