@@ -9,6 +9,12 @@ import javax.ejb.Startup;
 @Startup
 public class ConfigBean {
 
+    @EJB
+    private AdministratorBean administratorBean;
+    @EJB
+    private PatientBean patientBean;
+    @EJB
+    private NeedBean needBean;
     //@EJB
     //private AdministratorBean administratorBean;
     
@@ -20,9 +26,14 @@ public class ConfigBean {
 
         try {
 
-            //administratorBean.create("a1", "a1", "a1", "a1@ipleiria.pt");
-            //administratorBean.create("a2", "a2", "a2", "a2@ipleiria.pt");
-            //administratorBean.create("a3", "a3", "a3", "a3@ipleiria.pt");
+
+            administratorBean.create("a1", "a1", "a1", "a1@ipleiria.pt");
+            
+            patientBean.create(1, "Zé");
+            needBean.create(1, "Alcool");
+            
+            patientBean.enrollNeed(1, 1);
+
             
             caregiverBean.create("11111", "123456789", "André", "1111@11111.com");
             caregiverBean.create("11121", "123456789", "João", "1141@11111.com");
@@ -31,7 +42,7 @@ public class ConfigBean {
             
             caregiverBean.searchCaregiver("João");
             
-            
+
         } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());
         } 
