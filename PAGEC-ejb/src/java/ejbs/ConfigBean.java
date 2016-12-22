@@ -38,7 +38,9 @@ public class ConfigBean {
             caregiverBean.create("11141", "123456789", "Jaquim", "1121@11111.com");
             
             caregiverBean.enrollPatient("11111", 1);
+            
             caregiverBean.unrollPatient("11111", 1);
+            patientBean.unrollNeed(1, 1);
 
         } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());
