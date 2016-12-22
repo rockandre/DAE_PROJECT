@@ -54,6 +54,10 @@ public class NeedBean {
                 throw new EntityDoesNotExistsException("There is no patient with that id");
             }
 
+            for(TrainingMaterial trainingMaterial: need.getTrainingMaterials()){
+                trainingMaterial.removeNeed(need);
+            }
+            
             em.remove(need);
 
         } catch (EntityDoesNotExistsException e) {
