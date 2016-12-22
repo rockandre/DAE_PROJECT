@@ -1,12 +1,11 @@
 package ejbs;
 
 import entities.Need;
-import entities.Patient;
+import entities.TrainingMaterial;
 import exceptions.EntityAlreadyExistsException;
 import exceptions.EntityDoesNotExistsException;
 import exceptions.MyConstraintViolationException;
 import exceptions.Utils;
-import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.EJBException;
 import javax.ejb.Stateless;
@@ -63,14 +62,14 @@ public class NeedBean {
             throw new EJBException(e.getMessage());
         }
     }
-    /*
-    public void enrollNeed(String username, int needId) 
+    
+    public void enrollTrainingMaterial(int needId, int trainingMaterialId) 
             throws EntityDoesNotExistsException{
         try {
 
-            Patient patient = em.find(Patient.class, username);
-            if (patient == null) {
-                throw new EntityDoesNotExistsException("There is no patient with that username.");
+            TrainingMaterial trainingMaterial = em.find(TrainingMaterial.class, trainingMaterialId);
+            if (trainingMaterial == null) {
+                throw new EntityDoesNotExistsException("There is no training material with that username.");
             }
 
             Need need = em.find(Need.class, needId);
@@ -78,16 +77,16 @@ public class NeedBean {
                 throw new EntityDoesNotExistsException("There is no need with that code.");
             }
 
-            if (!patient.getNeeds().contains(need)) {
+            if (trainingMaterial.getNeeds().contains(need)) {
                 throw new Exception("Patient's course has no such need.");
             }
 
-            if (need.getPatients().contains(patient)) {
+            if (need.getTrainingMaterials().contains(trainingMaterial)) {
                 throw new Exception("Patient is already enrolled in that need.");
             }
 
-            need.addPatient(patient);
-            patient.addNeed(need);
+            need.addTrainingMaterial(trainingMaterial);
+            trainingMaterial.addNeed(need);
 
         } catch (EntityDoesNotExistsException e) {
             throw e;
@@ -96,31 +95,28 @@ public class NeedBean {
         }
     }
 
-    public void unrollPatient(String username, int needId) 
-            throws EntityDoesNotExistsException {
+    public void unrollPatient(int needId, int trainingMaterialId){
         try {
             Need need = em.find(Need.class, needId);
             if(need == null){
                 throw new EntityDoesNotExistsException("There is no need with that code.");
             }            
             
-            Patient patient = em.find(Patient.class, username);
-            if(patient == null){
+            TrainingMaterial trainingMaterial = em.find(TrainingMaterial.class, trainingMaterialId);
+            if(trainingMaterial == null){
                 throw new EntityDoesNotExistsException("There is no patient with that username.");
             }
             
-            if(!need.getPatients().contains(patient)){
+            if(!need.getTrainingMaterials().contains(trainingMaterial)){
                 throw new Exception("Patient not enrolled");
             }            
             
-            need.removePatient(patient);
-            patient.removeNeed(need);
-
-        } catch (EntityDoesNotExistsException e) {
-            throw e;             
+            need.removeTrainingMaterial(trainingMaterial);
+            trainingMaterial.removeNeed(need);
+            
         } catch (Exception e) {
             throw new EJBException(e.getMessage());
         }
     }
-    */
+    
 }
