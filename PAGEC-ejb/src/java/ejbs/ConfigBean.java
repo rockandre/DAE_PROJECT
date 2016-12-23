@@ -25,6 +25,8 @@ public class ConfigBean {
     
     @EJB
     private ProcedureBean procedureBean;
+    @EJB
+    private HealthcareProfBean healthcareProfBean;
 
     @PostConstruct
     public void populateBD() {
@@ -32,6 +34,7 @@ public class ConfigBean {
         try {
             administratorBean.create("a1", "a1", "a1", "a1@ipleiria.pt");
             administratorBean.create("Admin", "adm", "Xico", "cenas@fsa.pt");
+            healthcareProfBean.create("healthcare", "healthcare", "Health", "health@xico.pt");
             patientBean.create(1, "Zé");
             needBean.create(1, "Alcool");
             
