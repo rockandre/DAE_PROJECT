@@ -1,0 +1,210 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <h:head>
+        <title>Academic Management</title>
+    </h:head>
+    <h:body>
+
+        <h:dataTable
+            var="student"
+            summary="List of all students"
+            value="#{administratorManager.allStudentsREST}"
+            rules="all"
+            cellpadding="5">
+            
+            <f:facet name="header">
+                <h:outputText value="Students" />
+            </f:facet>            
+
+            <h:column>
+                <f:facet name="header">
+                    <h:outputText value="Username" />
+                </f:facet>
+                <h:outputText value="#{student.username}" />
+                <!--Falta validar o formato-->
+            </h:column>
+
+            <h:column>
+                <f:facet name="header">
+                    <h:outputText value="Name" />
+                </f:facet>
+                <h:outputText value="#{student.name}" />
+            </h:column>
+
+            <h:column>
+                <f:facet name="header">
+                    <h:outputText value="Email" />
+                </f:facet>
+                <h:outputText value="#{student.email}" />
+            </h:column>                        
+
+            <h:column>
+                <f:facet name="header">
+                    <h:outputText value="Course" />
+                </f:facet>
+                <h:outputText value="#{student.courseName}" />
+            </h:column>                        
+
+            <h:column>
+                <f:facet name="header">
+                    <h:outputText value="Actions" />
+                </f:facet>
+                <h:form>
+                    <h:commandLink value="Details" action="admin_students_details?faces-redirect=true">
+                        <f:setPropertyActionListener target="#{administratorManager.currentStudent}" value="#{student}" />
+                    </h:commandLink>
+                    &nbsp;
+                    <h:commandLink value="Update" action="admin_students_update?faces-redirect=true">
+                        <f:setPropertyActionListener target="#{administratorManager.currentStudent}" value="#{student}" />
+                    </h:commandLink>
+                    &nbsp;
+                    <h:commandLink value="Remove" actionListener="#{administratorManager.removeStudent}">
+                        <f:param name="studentUsername" id="studentUsername" value="#{student.username}" />
+                    </h:commandLink>
+                </h:form>
+            </h:column>                        
+
+        </h:dataTable>
+        
+        <br/>
+        <br/>
+        
+        <h:form>
+            <h:commandLink value="New student" action="admin_students_create?faces-redirect=true"/>
+        </h:form>
+        
+        <br/>
+        <br/>       
+        
+        <h:dataTable
+            var="course"
+            summary="List of all courses"
+            value="#{administratorManager.allCourses}"
+            rules="all"
+            cellpadding="5">
+
+            <f:facet name="header">
+                <h:outputText value="Courses" />
+            </f:facet>                        
+            
+            <h:column>
+                <f:facet name="header">
+                    <h:outputText value="Code" />
+                </f:facet>
+                <h:outputText value="#{course.code}" />
+            </h:column>
+
+            <h:column>
+                <f:facet name="header">
+                    <h:outputText value="Name" />
+                </f:facet>
+                <h:outputText value="#{course.name}" />
+            </h:column>
+
+            <h:column>
+                <f:facet name="header">
+                    <h:outputText value="Actions" />
+                </f:facet>
+                <h:form>
+                    <h:commandLink value="Details" action="admin_courses_details?faces-redirect=true">
+                        <f:setPropertyActionListener target="#{administratorManager.currentCourse}" value="#{course}" />
+                    </h:commandLink>
+                    &nbsp;
+                    <h:commandLink value="Remove" actionListener="#{administratorManager.removeCourse}">
+                        <f:param name="courseCode" id="courseCode" value="#{course.code}" />
+                    </h:commandLink>
+                </h:form>
+            </h:column>                        
+
+        </h:dataTable>
+        
+        <br/>
+        <br/>
+        
+        <h:form>
+            <h:commandLink value="New course" action="admin_courses_create?faces-redirect=true"/>
+        </h:form>
+        
+        <h:dataTable
+            var="subject"
+            summary="List of all subjects"
+            value="#{administratorManager.allSubjects}"
+            rules="all" 
+            cellpadding="5">
+            
+            <f:facet name="header">
+                <h:outputText value="Subjects" />
+            </f:facet>                        
+
+            <h:column>
+                <f:facet name="header">
+                    <h:outputText value="Code" />
+                </f:facet>
+                <h:outputText value="#{subject.code}" />
+                <!--Falta validar o formato-->
+            </h:column>
+
+            <h:column>
+                <f:facet name="header">
+                    <h:outputText value="Name" />
+                </f:facet>
+                <h:outputText value="#{subject.name}" />
+            </h:column>
+
+            <h:column>
+                <f:facet name="header">
+                    <h:outputText value="Course" />
+                </f:facet>
+                <h:outputText value="#{subject.courseName}" />
+            </h:column>                        
+
+            <h:column>
+                <f:facet name="header">
+                    <h:outputText value="Course Year" />
+                </f:facet>
+                <h:outputText value="#{subject.courseYear}" />
+            </h:column>                        
+
+            <h:column>
+                <f:facet name="header">
+                    <h:outputText value="Scholar Year" />
+                </f:facet>
+                <h:outputText value="#{subject.scholarYear}" />
+            </h:column>                        
+            
+            <h:column>
+                <f:facet name="header">
+                    <h:outputText value="Actions" />
+                </f:facet>
+                <h:form>
+                    <h:commandLink value="Details" action="admin_subjects_details?faces-redirect=true">
+                        <f:setPropertyActionListener target="#{administratorManager.currentSubject}" value="#{subject}" />
+                    </h:commandLink>
+                    &nbsp;
+                    <h:commandLink value="Manage Students" action="admin_subjects_update?faces-redirect=true">
+                        <f:setPropertyActionListener target="#{administratorManager.currentSubject}" value="#{subject}" />
+                    </h:commandLink>
+                    &nbsp;
+                    <h:commandLink value="Remove" actionListener="#{administratorManager.removeSubject}">
+                        <f:param name="subjectCode" id="subjectCode" value="#{subject.code}" />
+                    </h:commandLink>
+                </h:form>
+            </h:column>                        
+
+        </h:dataTable>
+        
+        <br/>
+        <br/>
+        
+        <h:form>
+            <h:commandLink value="New subject" action="admin_subjects_create?faces-redirect=true"/>
+        </h:form>
+        
+        <h:messages errorStyle="color: red" />
+        
+    </h:body>
+</html>
+

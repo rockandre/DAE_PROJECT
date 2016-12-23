@@ -31,7 +31,7 @@ public class ConfigBean {
 
         try {
             administratorBean.create("a1", "a1", "a1", "a1@ipleiria.pt");
-            
+            administratorBean.create("Admin", "adm", "Xico", "cenas@fsa.pt");
             patientBean.create(1, "Zé");
             needBean.create(1, "Alcool");
             

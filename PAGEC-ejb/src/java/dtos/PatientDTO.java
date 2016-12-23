@@ -6,37 +6,43 @@
 package dtos;
 
 import java.io.Serializable;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
  * @author rockandre
  */
+@XmlRootElement(name = "Patient")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class PatientDTO implements Serializable{
 
     private int id;
     private String name;
-    private int caregiverId;
+    private String caregiverUsername;
     private String carevigerName;
     
     public PatientDTO() {
         
     }
 
-    public PatientDTO(int id, String name, int caregiverId, String carevigerName) {
+    public PatientDTO(int id, String name, String caregiverUsername, String carevigerName) {
         this.id = id;
         this.name = name;
-        this.caregiverId = caregiverId;
+        this.caregiverUsername = caregiverUsername;
         this.carevigerName = carevigerName;
     }
 
-    public int getCaregiverId() {
-        return caregiverId;
+    public String getCaregiverUsername() {
+        return caregiverUsername;
     }
 
-    public void setCaregiverId(int caregiverId) {
-        this.caregiverId = caregiverId;
+    public void setCaregiverUsername(String caregiverUsername) {
+        this.caregiverUsername = caregiverUsername;
     }
 
+    
     public String getCarevigerName() {
         return carevigerName;
     }

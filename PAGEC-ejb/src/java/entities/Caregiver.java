@@ -14,6 +14,8 @@ import javax.persistence.Entity;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -24,6 +26,7 @@ import javax.persistence.OneToMany;
     @NamedQuery(name = "getAllCaregivers", query = "SELECT t FROM Caregiver t ORDER BY t.name"),
     @NamedQuery(name = "searchCaregivers", query = "SELECT t FROM Caregiver t WHERE t.name LIKE :name")
 })
+@XmlRootElement
 public class Caregiver extends User implements Serializable {
 
     @OneToMany(mappedBy = "caregiver", cascade = CascadeType.REMOVE)
@@ -38,6 +41,7 @@ public class Caregiver extends User implements Serializable {
         patients = new LinkedList<>();
     }
 
+    @XmlTransient
     public List<Patient> getPatients() {
         return patients;
     }

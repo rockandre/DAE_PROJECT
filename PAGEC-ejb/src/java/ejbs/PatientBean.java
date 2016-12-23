@@ -1,5 +1,6 @@
 package ejbs;
 
+import dtos.PatientDTO;
 import entities.Need;
 import entities.Patient;
 import entities.Procedure;
@@ -7,12 +8,14 @@ import exceptions.EntityAlreadyExistsException;
 import exceptions.EntityDoesNotExistsException;
 import exceptions.MyConstraintViolationException;
 import exceptions.Utils;
+import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.EJBException;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.validation.ConstraintViolationException;
+import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
@@ -42,12 +45,13 @@ public class PatientBean {
         }
     }
     
+    @GET
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Path("all")
-    public List<Patient> getAll() {
+    public List<PatientDTO> getAll() {
         try {
             List<Patient> patients = (List<Patient>) em.createNamedQuery("getAllPatients").getResultList();
-            return patients;
+            return patientsToDTOs(patients);
         } catch (Exception e) {
             throw new EJBException(e.getMessage());
         }
@@ -183,5 +187,11 @@ public class PatientBean {
         }
     }
 */
-    
+    List<PatientDTO> patientsToDTOs(List<Patient> patients) {
+        List<PatientDTO> dtos = new ArrayList<>();
+        for(Patient patient : patients) {
+            dtos.add(new PatientDTO(patient.getId(), patient.getName(), patient.getCaregiver().getUsername(), patient.getCaregiver().getName()));
+        }
+        return dtos;
+    }
 }

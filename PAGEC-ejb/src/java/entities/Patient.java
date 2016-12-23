@@ -18,6 +18,8 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -33,6 +35,7 @@ import javax.validation.constraints.NotNull;
     //@NamedQuery(name = "getAllCoursesNames",
     //query = "SELECT c.name FROM Course c ORDER BY c.name")
 })
+@XmlRootElement
 public class Patient implements Serializable {
 
     @Id
@@ -90,6 +93,7 @@ public class Patient implements Serializable {
         this.caregiver = caregiver;
     }
 
+    @XmlTransient
     public List<Need> getNeeds() {
         return needs;
     }
@@ -118,6 +122,7 @@ public class Patient implements Serializable {
         procedures.remove(procedure);
     }
 
+    @XmlTransient
     public List<Procedure> getProcedures() {
         return procedures;
     }

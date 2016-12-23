@@ -14,6 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
@@ -21,6 +22,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "USERS_GROUPS")
+@XmlRootElement
 public class UserGroup implements Serializable {
 
 
