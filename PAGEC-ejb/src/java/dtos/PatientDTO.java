@@ -15,15 +15,37 @@ public class PatientDTO implements Serializable{
 
     private int id;
     private String name;
+    private int caregiverId;
+    private String carevigerName;
     
     public PatientDTO() {
         
     }
-    
-    public PatientDTO(int id, String name) {
-        this.id=id;
-        this.name=name;
+
+    public PatientDTO(int id, String name, int caregiverId, String carevigerName) {
+        this.id = id;
+        this.name = name;
+        this.caregiverId = caregiverId;
+        this.carevigerName = carevigerName;
     }
+
+    public int getCaregiverId() {
+        return caregiverId;
+    }
+
+    public void setCaregiverId(int caregiverId) {
+        this.caregiverId = caregiverId;
+    }
+
+    public String getCarevigerName() {
+        return carevigerName;
+    }
+
+    public void setCarevigerName(String carevigerName) {
+        this.carevigerName = carevigerName;
+    }
+    
+    
 
     public int getId() {
         return id;

@@ -12,16 +12,18 @@ import exceptions.EntityDoesNotExistsException;
 import java.util.List;
 import javax.ejb.EJBException;
 import javax.ejb.Stateless;
-import javax.ejb.LocalBean;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 
 /**
  *
  * @author rockandre
  */
 @Stateless
-@LocalBean
+@Path("/caregivers")
 public class CaregiverBean {
 
     @PersistenceContext
@@ -38,7 +40,9 @@ public class CaregiverBean {
         }
     }
     
-    public List<Caregiver> getAllCaregivers() {
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Path("all")
+    public List<Caregiver> getAll() {
         try {
             List<Caregiver> caregivers = (List<Caregiver>) em.createNamedQuery("getAllCaregivers").getResultList();
             return caregivers;

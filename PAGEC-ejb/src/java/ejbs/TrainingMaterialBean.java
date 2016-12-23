@@ -5,25 +5,25 @@
  */
 package ejbs;
 
-import entities.Caregiver;
 import entities.Need;
-import entities.Patient;
 import entities.TrainingMaterial;
-import entities.User;
 import enumerations.TRMAT;
 import exceptions.EntityDoesNotExistsException;
 import java.util.List;
 import javax.ejb.EJBException;
 import javax.ejb.Stateless;
-import javax.ejb.LocalBean;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 
 /**
  *
  * @author rockandre
  */
 @Stateless
+@Path("/trainingMaterials")
 public class TrainingMaterialBean {
 
     @PersistenceContext
@@ -41,7 +41,9 @@ public class TrainingMaterialBean {
         }
     }
     
-    public List<TrainingMaterial> getAllTrainingMaterials() {
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Path("all")
+    public List<TrainingMaterial> getAll() {
         try {
             List<TrainingMaterial> trainingMaterials = (List<TrainingMaterial>) em.createNamedQuery("getAllTrainingMaterials").getResultList();
             return trainingMaterials;

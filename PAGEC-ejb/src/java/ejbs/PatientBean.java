@@ -2,6 +2,7 @@ package ejbs;
 
 import entities.Need;
 import entities.Patient;
+import entities.Procedure;
 import exceptions.EntityAlreadyExistsException;
 import exceptions.EntityDoesNotExistsException;
 import exceptions.MyConstraintViolationException;
@@ -12,8 +13,12 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.validation.ConstraintViolationException;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 
 @Stateless
+@Path("/patients")
 public class PatientBean {
 
     @PersistenceContext
@@ -36,7 +41,9 @@ public class PatientBean {
             throw new EJBException(e.getMessage());
         }
     }
-
+    
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Path("all")
     public List<Patient> getAll() {
         try {
             List<Patient> patients = (List<Patient>) em.createNamedQuery("getAllPatients").getResultList();
@@ -119,6 +126,62 @@ public class PatientBean {
             throw new EJBException(e.getMessage());
         }
     }
+    
+    
+    public void enrollProcedure(int patientId, int procedureId){
+        try {
 
+            Procedure procedure = em.find(Procedure.class, procedureId);
+            if (procedure == null) {
+                throw new EntityDoesNotExistsException("There is no training material with that username.");
+            }
+
+            Patient patient = em.find(Patient.class, patientId);
+            if (patient == null) {
+                throw new EntityDoesNotExistsException("There is no need with that code.");
+            }
+
+            if (procedure.getPatients().contains(patient)) {
+                throw new Exception("Patient's course has no such need.");
+            }
+
+            if (patient.getProcedures().contains(procedure)) {
+                throw new Exception("Patient is already enrolled in that need.");
+            }
+
+            procedure.addPatient(patient);
+            patient.addProcedure(procedure);
+            
+
+        } catch (Exception e) {
+            throw new EJBException(e.getMessage());
+        }
+    }
+    
+/*
+    public void unrollProcedure(int patientId, int procedureId){
+        try {
+            Patient patient = em.find(Patient.class, patientId);
+            if(patient == null){
+                throw new EntityDoesNotExistsException("There is no need with that code.");
+            }            
+            
+            Procedure procedure = em.find(Procedure.class, procedureId);
+            if(procedure == null){
+                throw new EntityDoesNotExistsException("There is no patient with that username.");
+            }
+            
+            if(!patient.getProcedures().contains(procedure)){
+                throw new Exception("Patient not enrolled");
+            }            
+            
+            patient.removeProcedure(procedure);
+            procedure.removePatient(patient);
+            
+        } catch (Exception e) {
+            throw new EJBException(e.getMessage());
+        }
+    }
+*/
     
 }

@@ -22,6 +22,9 @@ public class ConfigBean {
     
     @EJB
     private TrainingMaterialBean trainingMaterialBean;
+    
+    @EJB
+    private ProcedureBean procedureBean;
 
     @PostConstruct
     public void populateBD() {
@@ -45,8 +48,13 @@ public class ConfigBean {
             
             needBean.enrollTrainingMaterial(1, 1);
             
-            needBean.unrollPatient(1, 1);
+            //needBean.unrollPatient(1, 1);
+            
+            procedureBean.create(1, "Arranjar uma perna", "Fazer estalar 3 vezes para o lado esquerdo e depois uma para o direito!");
+            
+            patientBean.enrollProcedure(1, 1);
 
+            
         } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());
         } 

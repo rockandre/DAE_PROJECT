@@ -11,12 +11,12 @@ import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -46,14 +46,24 @@ public class Patient implements Serializable {
     @ManyToMany(mappedBy = "patients")
     private List<Need> needs;
     
+    @ManyToMany
+    @JoinTable(name = "PATIENT_PROCEDURE",
+            joinColumns
+            = @JoinColumn(name = "PATIENT_ID", referencedColumnName = "ID"),
+            inverseJoinColumns
+            = @JoinColumn(name = "PROCEDURE_ID", referencedColumnName = "ID"))
+    private List<Procedure> procedures;
+    
     public Patient(){
         needs = new LinkedList<>();
+        procedures = new LinkedList<>();
     }
     
     public Patient(int id, String name){
         this.id = id;
         this.name = name;
         needs = new LinkedList<>();
+        procedures = new LinkedList<>();
     }
 
     public int getId() {
@@ -99,4 +109,22 @@ public class Patient implements Serializable {
     public void removeCaregiver() {
         this.caregiver = null;
     }
+    
+    public void addProcedure(Procedure procedure) {
+        procedures.add(procedure);
+    }
+
+    public void removeProcedure(Procedure procedure) {
+        procedures.remove(procedure);
+    }
+
+    public List<Procedure> getProcedures() {
+        return procedures;
+    }
+
+    public void setProcedures(List<Procedure> procedures) {
+        this.procedures = procedures;
+    }
+    
+    
 }

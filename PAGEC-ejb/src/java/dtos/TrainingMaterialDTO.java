@@ -16,22 +16,35 @@ public class TrainingMaterialDTO implements Serializable{
     String name;
     String tipoSuporte;
     String tipoTrainingMaterial;
+    String link;
 
     public TrainingMaterialDTO() {
     }
 
-    public TrainingMaterialDTO(int id, String name, String tipoSuporte, String tipoTrainingMaterial) {
+    public TrainingMaterialDTO(int id, String name, String tipoSuporte, String tipoTrainingMaterial, String link) {
         this.id = id;
         this.name = name;
         this.tipoSuporte = tipoSuporte;
         this.tipoTrainingMaterial = tipoTrainingMaterial;
+        this.link = link;
     }
+
+    public String getLink() {
+        return link;
+    }
+
+    public void setLink(String link) {
+        this.link = link;
+    }
+
+    
 
     public void reset(){
         setId(0);
         setName(null);
         setTipoSuporte(null);
         setTipoTrainingMaterial(null);
+        setLink(null);
     }
     
     public int getId() {

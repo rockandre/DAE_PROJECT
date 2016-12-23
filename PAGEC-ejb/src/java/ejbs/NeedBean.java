@@ -12,8 +12,12 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.validation.ConstraintViolationException;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 
 @Stateless
+@Path("/needs")
 public class NeedBean {
 
     @PersistenceContext
@@ -36,7 +40,9 @@ public class NeedBean {
             throw new EJBException(e.getMessage());
         }
     }
-
+    
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Path("all")
     public List<Need> getAll() {
         try {
             List<Need> needs = (List<Need>) em.createNamedQuery("getAllNeeds").getResultList();
@@ -99,7 +105,7 @@ public class NeedBean {
         }
     }
 
-    public void unrollPatient(int needId, int trainingMaterialId){
+    public void unrollTrainingMaterial(int needId, int trainingMaterialId){
         try {
             Need need = em.find(Need.class, needId);
             if(need == null){

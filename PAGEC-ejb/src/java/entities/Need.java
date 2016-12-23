@@ -16,6 +16,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -23,6 +26,13 @@ import javax.validation.constraints.NotNull;
  * @author joaop
  */
 @Entity
+@Table(name = "NEEDS")
+@NamedQueries({
+    @NamedQuery(name = "getAllNeeds",
+    query = "SELECT c FROM Need c ORDER BY c.name"),
+    //@NamedQuery(name = "getAllCoursesNames",
+    //query = "SELECT c.name FROM Course c ORDER BY c.name")
+})
 public class Need implements Serializable {
 
     @Id
