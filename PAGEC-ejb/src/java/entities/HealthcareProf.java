@@ -18,7 +18,7 @@ import javax.persistence.NamedQuery;
 @NamedQuery(name = "getAllHealthcareProfs", query = "SELECT t FROM HealthcareProf t ORDER BY t.name")
 public class HealthcareProf extends User implements Serializable {
 
-    protected HealthcareProf() {
+    public HealthcareProf() {
     }
 
     public HealthcareProf(String username, String password, String name, String email) {

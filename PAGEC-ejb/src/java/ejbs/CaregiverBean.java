@@ -8,12 +8,16 @@ package ejbs;
 import entities.Caregiver;
 import entities.Patient;
 import entities.User;
+import exceptions.EntityAlreadyExistsException;
 import exceptions.EntityDoesNotExistsException;
+import exceptions.MyConstraintViolationException;
+import exceptions.Utils;
 import java.util.List;
 import javax.ejb.EJBException;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.validation.ConstraintViolationException;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
@@ -32,12 +36,17 @@ public class CaregiverBean {
     @PersistenceContext
     private EntityManager em;
     
-    public void create(String username, String password, String name, String email) {
+    public void create(String username, String password, String name, String email) 
+            throws EntityAlreadyExistsException, MyConstraintViolationException{
         try {
             if (em.find(User.class, username) != null) {
-                return;
+                throw new EntityAlreadyExistsException("A administrator with that username already exists.");
             }
             em.persist(new Caregiver(username, password, name, email));
+        } catch (EntityAlreadyExistsException e) {
+            throw e;
+        } catch (ConstraintViolationException e) {
+            throw new MyConstraintViolationException(Utils.getConstraintViolationMessages(e));
         } catch (Exception e) {
             throw new EJBException(e.getMessage());
         }

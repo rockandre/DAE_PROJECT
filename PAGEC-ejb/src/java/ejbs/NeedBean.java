@@ -79,7 +79,7 @@ public class NeedBean {
 
             TrainingMaterial trainingMaterial = em.find(TrainingMaterial.class, trainingMaterialId);
             if (trainingMaterial == null) {
-                throw new EntityDoesNotExistsException("There is no training material with that username.");
+                throw new EntityDoesNotExistsException("There is no training material with that id.");
             }
 
             Need need = em.find(Need.class, needId);

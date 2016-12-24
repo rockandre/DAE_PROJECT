@@ -33,8 +33,13 @@ public class ConfigBean {
 
         try {
             administratorBean.create("a1", "a1", "a1", "a1@ipleiria.pt");
-            administratorBean.create("Admin", "adm", "Xico", "cenas@fsa.pt");
-            healthcareProfBean.create("healthcare", "healthcare", "Health", "health@xico.pt");
+            administratorBean.create("a2", "a2", "a2", "a2@ipleiria.pt");
+            administratorBean.create("a3", "a3", "a3", "a3@ipleiria.pt");
+            administratorBean.create("a4", "a4", "a4", "a4@ipleiria.pt");
+            healthcareProfBean.create("hc1", "hc1", "hc1", "hc1@ipleiria.pt");
+            healthcareProfBean.create("hc2", "hc2", "hc2", "hc2@ipleiria.pt");
+            healthcareProfBean.create("hc3", "hc3", "hc3", "hc3@ipleiria.pt");
+            healthcareProfBean.create("hc4", "hc4", "hc4", "hc4@ipleiria.pt");
             patientBean.create(1, "Zé");
             needBean.create(1, "Alcool");
             
