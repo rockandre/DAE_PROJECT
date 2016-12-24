@@ -1,0 +1,131 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <h:head>
+        <title>PAGEC</title>
+    </h:head>
+    <h:body>
+        <h:panelGrid columns="2">
+
+            <h:outputLabel for="username" value="Username: " />
+            <h:outputText 
+                id="username"
+                value="#{healtcareProfManager.currentCaregiver.username}"/>
+
+            <h:outputLabel for="name" value="Name: " />
+            <h:outputText 
+                id="name"
+                value="#{healtcareProfManager.currentCaregiver.name}"/>
+
+            <h:outputLabel for="email" value="Email: " />
+            <h:outputText 
+                id="email"
+                value="#{healtcareProfManager.currentCaregiver.email}"/>
+
+
+        </h:panelGrid>
+        
+        <br/>        
+
+        <h:dataTable
+            var="patient"
+            summary="Enrolled patients"
+            value="#{healtcareProfManager.enrolledPatients}"
+            rules="all"
+            cellpadding="5">
+
+            <f:facet name="header">
+                <h:outputText value="Enrolled patients" />
+            </f:facet>
+
+            <h:column>
+                <f:facet name="header">
+                    <h:outputText value="ID" />
+                </f:facet>
+                <h:outputText value="#{patient.id}" />
+                <!--Falta validar o formato-->
+            </h:column>
+
+            <h:column>
+                <f:facet name="header">
+                    <h:outputText value="Name" />
+                </f:facet>
+                <h:outputText value="#{patient.name}" />
+            </h:column>                       
+
+            <h:column>
+                <f:facet name="header">
+                    <h:outputText value="Actions" />
+                </f:facet>
+                <h:form>
+                    <h:commandLink value="Unroll" actionListener="#{healtcareProfManager.unrollPatient}">
+                        <f:param name="patientId" id="patientId" value="#{patient.id}" />
+                    </h:commandLink>
+                </h:form>
+            </h:column>
+
+        </h:dataTable>            
+
+        <br/>
+        <br/>
+        
+        <br/>
+
+        <h:dataTable
+            var="patient"
+            summary="Unrolled patients"
+            value="#{healtcareProfManager.unrolledPatients}"
+            rules="all"
+            cellpadding="5">
+
+            <f:facet name="header">
+                <h:outputText value="Unrolled patients" />
+            </f:facet>
+
+            <h:column>
+                <f:facet name="header">
+                    <h:outputText value="ID" />
+                </f:facet>
+                <h:outputText value="#{patient.id}" />
+                <!--Falta validar o formato-->
+            </h:column>
+
+            <h:column>
+                <f:facet name="header">
+                    <h:outputText value="Name" />
+                </f:facet>
+                <h:outputText value="#{patient.name}" />
+            </h:column>
+                      
+
+            <h:column>
+                <f:facet name="header">
+                    <h:outputText value="Actions" />
+                </f:facet>
+                <h:form>
+                    <h:commandLink value="Enroll" actionListener="#{healtcareProfManager.enrollPatient}">
+                        <f:param name="patientId" id="patientId" value="#{patient.id}" />
+                    </h:commandLink>
+                </h:form>
+            </h:column>
+
+        </h:dataTable>            
+        
+        
+        <br/>
+        <br/>
+
+        <h:form>                  
+            <h:commandLink
+                id="return"
+                value="Return"
+                action="/faces/healthcareProf/healthcareProf_index?faces-redirect=true" />
+        </h:form>
+
+        <h:messages errorStyle="color: red" />        
+        
+    </h:body>
+</html>
+

@@ -5,13 +5,17 @@
  */
 package ejbs;
 
+import entities.Administrator;
 import entities.Caregiver;
 import entities.Patient;
 import entities.User;
 import exceptions.EntityAlreadyExistsException;
 import exceptions.EntityDoesNotExistsException;
+import exceptions.EntityEnrolledException;
+import exceptions.EntityNotEnrolledException;
 import exceptions.MyConstraintViolationException;
 import exceptions.Utils;
+import java.util.LinkedList;
 import java.util.List;
 import javax.ejb.EJBException;
 import javax.ejb.Stateless;
@@ -102,7 +106,8 @@ public class CaregiverBean {
         }
     } 
     
-    public void enrollPatient(String username, int patientId){
+    public void enrollPatient(String username, int patientId) 
+            throws EntityDoesNotExistsException, EntityEnrolledException {
         try {
             Caregiver caregiver = em.find(Caregiver.class, username);
             if (caregiver == null) {
@@ -115,22 +120,22 @@ public class CaregiverBean {
             }
 
             if (patient.getCaregiver() != null) {
-                throw new Exception("Patient already has a caregiver.");
+                throw new EntityEnrolledException("Patient already has a caregiver!");
             }
 
-            if (caregiver.getPatients().contains(patient)) {
-                throw new Exception("Caregiver is already enrolled in that Patient.");
-            }
 
             caregiver.addPatient(patient);
             patient.setCaregiver(caregiver);
         
+        } catch (EntityDoesNotExistsException | EntityEnrolledException e) {
+            throw e;
         } catch (Exception e) {
             throw new EJBException(e.getMessage());
         }
     }
     
-    public void unrollPatient(String username, int patientId) {
+    public void unrollPatient(String username, int patientId) 
+        throws EntityDoesNotExistsException, EntityNotEnrolledException {
         try {
             Patient patient = em.find(Patient.class, patientId);
             if(patient == null){
@@ -143,16 +148,85 @@ public class CaregiverBean {
             }
             
             if(patient.getCaregiver() == null){
-                throw new Exception("Already has no Caregiver.");
-            }
-
-            if(!caregiver.getPatients().contains(patient)) {
-                throw new Exception("Caregiver has no such Patient.");
+                throw new EntityNotEnrolledException("The patient already has no caregiver!");
             }
             
             patient.removeCaregiver();
             caregiver.removePatient(patient);
-                       
+                  
+        } catch (EntityDoesNotExistsException | EntityNotEnrolledException e) {
+            throw e;  
+        } catch (Exception e) {
+            throw new EJBException(e.getMessage());
+        }
+    }
+    
+    
+    public void update(String username, String password, String name, String email) 
+        throws EntityDoesNotExistsException, MyConstraintViolationException{
+        try {
+            Caregiver caregiver = em.find(Caregiver.class, username);
+            if (caregiver == null) {
+                throw new EntityDoesNotExistsException("There is no caregiver with that username.");
+            }
+            
+            caregiver.setPassword(password);
+            caregiver.setName(name);
+            caregiver.setEmail(email);
+            em.merge(caregiver);
+            
+        } catch (EntityDoesNotExistsException e) {
+            throw e;
+        } catch (ConstraintViolationException e) {
+            throw new MyConstraintViolationException(Utils.getConstraintViolationMessages(e));            
+        } catch (Exception e) {
+            throw new EJBException(e.getMessage());
+        }
+    }
+    
+    public void remove(String username) throws EntityDoesNotExistsException {
+        try {
+            Caregiver caregiver = em.find(Caregiver.class, username);
+            if (caregiver == null) {
+                throw new EntityDoesNotExistsException("There is no caregiver with that username.");
+            }
+            
+            
+            em.remove(caregiver);
+        
+        } catch (EntityDoesNotExistsException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new EJBException(e.getMessage());
+        }
+    }
+    
+    public List<Patient> getEnrolledPatients(String caregiverUsername) throws EntityDoesNotExistsException{
+        try {
+            Caregiver caregiver = em.find(Caregiver.class, caregiverUsername);
+            if (caregiver == null) {
+                throw new EntityDoesNotExistsException("There is no caregiver with that username.");
+            }           
+            List<Patient> patientsEnrolled = (List<Patient>) caregiver.getPatients();
+            return patientsEnrolled;
+        } catch (EntityDoesNotExistsException e) {
+            throw e;             
+        } catch (Exception e) {
+            throw new EJBException(e.getMessage());
+        }
+    }
+    
+    public List<Patient> getUnrolledPatients() {
+        try {
+            List<Patient> patients = (List<Patient>) em.createNamedQuery("getAllPatients").getResultList();
+            LinkedList<Patient> patientsUnrolled = new LinkedList<>();
+            for(Patient patient: patients){
+                if(patient.getCaregiver() == null){
+                    patientsUnrolled.add(patient);
+                }
+            }
+
+            return patientsUnrolled;            
         } catch (Exception e) {
             throw new EJBException(e.getMessage());
         }

@@ -2,9 +2,11 @@ package web;
 
 import dtos.PatientDTO;
 import ejbs.AdministratorBean;
+import ejbs.CaregiverBean;
 import ejbs.HealthcareProfBean;
 import ejbs.PatientBean;
 import entities.Administrator;
+import entities.Caregiver;
 import entities.HealthcareProf;
 import exceptions.EntityAlreadyExistsException;
 import exceptions.EntityDoesNotExistsException;
@@ -31,35 +33,25 @@ import javax.ws.rs.core.MediaType;
 public class AdministratorManager {
 
     @EJB
-    private PatientBean patientsBean;
+    private CaregiverBean caregiverBean;
     @EJB
     private AdministratorBean administratorBean;
     @EJB
     private HealthcareProfBean healthcareProfBean;
-    /*@EJB
-    private CourseBean courseBean;
-    @EJB
-    private SubjectBean subjectBean;*/
     private static final Logger logger = Logger.getLogger("web.AdministratorManager");
     private Administrator currentAdministrator;
     private Administrator newAdministrator;
     private HealthcareProf currentHealthcareProf;
     private HealthcareProf newHealthcareProf;
-    /*private StudentDTO newStudent;
-    private StudentDTO currentStudent;
-    private CourseDTO newCourse;
-    private CourseDTO currentCourse;
-    private SubjectDTO newSubject;
-    private SubjectDTO currentSubject;*/
+    private Caregiver currentCaregiver;
+    private Caregiver newCaregiver;
     private UIComponent component;
     private Client client;
     private final String baseUri = "http://localhost:8080/AcademicManagement_FICHA6-war/webapi";
-    public AdministratorManager() {/*
-        newStudent = new StudentDTO();
-        newCourse = new CourseDTO();
-        newSubject = new SubjectDTO();*/
+    public AdministratorManager() {
         newAdministrator = new Administrator();
         newHealthcareProf= new HealthcareProf();
+        newCaregiver= new Caregiver();
         client = ClientBuilder.newClient();
     }
 
@@ -103,7 +95,7 @@ public class AdministratorManager {
         } catch (Exception e) {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
         }
-        return "admin_students_update";
+        return "admin_administrators_update";
     }
     
     public void removeAdministrator(ActionEvent event) {
@@ -159,7 +151,7 @@ public class AdministratorManager {
         } catch (Exception e) {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
         }
-        return "admin_students_update";
+        return "admin_healthcareprofs_update";
     }
     
     public void removeHealthcareProf(ActionEvent event) {
@@ -173,6 +165,66 @@ public class AdministratorManager {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
         }
     }
+    
+    
+    //CAREGIVERS
+    public List<Caregiver> getAllCaregivers() {
+        try {
+            return caregiverBean.getAll();
+        } catch (Exception e) {
+            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
+        }
+        return null;
+    }
+    
+    public String createCaregiver() {
+        try {
+            caregiverBean.create(
+                    newCaregiver.getUsername(),
+                    newCaregiver.getPassword(),
+                    newCaregiver.getName(),
+                    newCaregiver.getEmail());
+            return "/faces/admin/admin_index?faces-redirect=true";
+        } catch (EntityAlreadyExistsException | MyConstraintViolationException e) {
+            FacesExceptionHandler.handleException(e, e.getMessage(), component, logger);
+        } catch (Exception e) {
+            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", component, logger);
+        }
+        return null;
+    }
+    
+    public String updateCaregiver() {
+        try {
+            caregiverBean.update(
+                    currentCaregiver.getUsername(),
+                    currentCaregiver.getPassword(),
+                    currentCaregiver.getName(),
+                    currentCaregiver.getEmail());
+            return "/faces/admin/admin_index?faces-redirect=true";
+
+        } catch (EntityDoesNotExistsException | MyConstraintViolationException e) {
+            FacesExceptionHandler.handleException(e, e.getMessage(), logger);
+        } catch (Exception e) {
+            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
+        }
+        return "admin_caregivers_update";
+    }
+    
+    public void removeCaregiver(ActionEvent event) {
+        try {
+            UIParameter param = (UIParameter) event.getComponent().findComponent("caregiverUsername");
+            String id = param.getValue().toString();
+            caregiverBean.remove(id);
+        } catch (EntityDoesNotExistsException e) {
+            FacesExceptionHandler.handleException(e, e.getMessage(), logger);
+        } catch (Exception e) {
+            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
+        }
+    }
+    
+    
+    
+    
     
     // GETTERS E SETTERS
 
@@ -199,6 +251,23 @@ public class AdministratorManager {
     public void setNewHealthcareProf(HealthcareProf newHealthcareProf) {
         this.newHealthcareProf = newHealthcareProf;
     }
+
+    public Caregiver getCurrentCaregiver() {
+        return currentCaregiver;
+    }
+
+    public void setCurrentCaregiver(Caregiver currentCaregiver) {
+        this.currentCaregiver = currentCaregiver;
+    }
+
+    public Caregiver getNewCaregiver() {
+        return newCaregiver;
+    }
+
+    public void setNewCaregiver(Caregiver newCaregiver) {
+        this.newCaregiver = newCaregiver;
+    }
+    
     
     
     

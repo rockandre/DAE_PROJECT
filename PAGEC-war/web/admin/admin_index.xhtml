@@ -134,6 +134,78 @@
         </h:form>
         
         
+        
+        <br/>
+        <br/>  
+        
+        <h:dataTable
+            var="caregiver"
+            summary="List of all Caregivers"
+            value="#{administratorManager.allCaregivers}"
+            rules="all"
+            cellpadding="4">
+            
+            <f:facet name="header">
+                <h:outputText value="Caregivers" />
+            </f:facet>            
+
+            <h:column>
+                <f:facet name="header">
+                    <h:outputText value="Username" />
+                </f:facet>
+                <h:outputText value="#{caregiver.username}" />
+                <!--Falta validar o formato-->
+            </h:column>
+
+            <h:column>
+                <f:facet name="header">
+                    <h:outputText value="Name" />
+                </f:facet>
+                <h:outputText value="#{caregiver.name}" />
+            </h:column>
+
+            <h:column>
+                <f:facet name="header">
+                    <h:outputText value="Email" />
+                </f:facet>
+                <h:outputText value="#{caregiver.email}" />
+            </h:column>     
+            
+                     
+            
+            <h:column>
+                <f:facet name="header">
+                    <h:outputText value="Actions" />
+                </f:facet>
+                <h:form>
+                    <h:commandLink value="Details" action="admin_caregivers_details?faces-redirect=true">
+                        <f:setPropertyActionListener target="#{administratorManager.currentCaregiver}" value="#{caregiver}" />
+                    </h:commandLink>
+                    &nbsp;
+                    <h:commandLink value="Update" action="admin_caregivers_update?faces-redirect=true">
+                        <f:setPropertyActionListener target="#{administratorManager.currentCaregiver}" value="#{caregiver}" />
+                    </h:commandLink>
+                    &nbsp;
+                    <h:commandLink value="Remove" actionListener="#{administratorManager.removeCaregiver}">
+                        <f:param name="caregiverUsername" id="caregiverUsername" value="#{caregiver.username}" />
+                    </h:commandLink>
+                </h:form>
+            </h:column>                        
+               
+        </h:dataTable>
+
+        <br/>
+        
+        <h:form>
+            <h:commandLink value="New Caregiver" action="admin_caregivers_create?faces-redirect=true"/>
+        </h:form>
+        
+        
+        
+        
+        
+        
+        
         <br/>
         <br/> 
         <h:form>

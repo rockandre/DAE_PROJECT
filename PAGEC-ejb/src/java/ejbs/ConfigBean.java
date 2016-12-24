@@ -41,6 +41,11 @@ public class ConfigBean {
             healthcareProfBean.create("hc3", "hc3", "hc3", "hc3@ipleiria.pt");
             healthcareProfBean.create("hc4", "hc4", "hc4", "hc4@ipleiria.pt");
             patientBean.create(1, "Zé");
+            patientBean.create(2, "Armando");
+            patientBean.create(3, "Pato");
+            patientBean.create(4, "Crocodilo");
+            patientBean.create(5, "Tubarão");
+            
             needBean.create(1, "Alcool");
             
             patientBean.enrollNeed(1, 1);
@@ -51,6 +56,9 @@ public class ConfigBean {
             caregiverBean.create("11141", "123456789", "Jaquim", "1121@11111.com");
             
             caregiverBean.enrollPatient("11111", 1);
+            caregiverBean.enrollPatient("11111", 2);
+            caregiverBean.enrollPatient("11111", 3);
+            caregiverBean.unrollPatient("11111", 3);
             
             trainingMaterialBean.create(1, "Respiracao boca a boca", "Suporte Basico de Vida", TRMAT.VIDEO);
             

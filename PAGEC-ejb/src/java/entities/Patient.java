@@ -31,9 +31,7 @@ import javax.xml.bind.annotation.XmlTransient;
 //@UniqueConstraint(columnNames = {"NAME"}))
 @NamedQueries({
     @NamedQuery(name = "getAllPatients",
-    query = "SELECT c FROM Patient c ORDER BY c.name"),
-    //@NamedQuery(name = "getAllCoursesNames",
-    //query = "SELECT c.name FROM Course c ORDER BY c.name")
+    query = "SELECT c FROM Patient c ORDER BY c.name")
 })
 @XmlRootElement
 public class Patient implements Serializable {

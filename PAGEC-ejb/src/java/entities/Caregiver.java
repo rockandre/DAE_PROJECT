@@ -32,7 +32,7 @@ public class Caregiver extends User implements Serializable {
     @OneToMany(mappedBy = "caregiver", cascade = CascadeType.REMOVE)
     private List<Patient> patients;
     
-    protected Caregiver() {
+    public Caregiver() {
         patients = new LinkedList<>();
     }
 
