@@ -188,10 +188,19 @@ public class PatientBean {
     }
 */
     List<PatientDTO> patientsToDTOs(List<Patient> patients) {
+        
         List<PatientDTO> dtos = new ArrayList<>();
+        System.err.println("Ola");
+        System.out.println("ejbs.PatientBean.patientsToDTOs()");
         for(Patient patient : patients) {
-            dtos.add(new PatientDTO(patient.getId(), patient.getName(), patient.getCaregiver().getUsername(), patient.getCaregiver().getName()));
+            if(patient.getCaregiver() == null){
+                dtos.add(new PatientDTO(patient.getId(), patient.getName(), "The patient does not have caregiver", "The patient does not have caregiver"));
+            } else {
+                dtos.add(new PatientDTO(patient.getId(), patient.getName(), patient.getCaregiver().getUsername(), patient.getCaregiver().getName()));
+            }
+            
         }
+        
         return dtos;
     }
 }

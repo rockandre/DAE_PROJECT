@@ -34,6 +34,14 @@ public class PatientDTO implements Serializable{
         this.carevigerName = carevigerName;
     }
 
+    public void reset(){
+        setId(0);
+        setName(null);
+        setCaregiverUsername(null);
+        setCarevigerName(null);
+    }
+    
+    
     public String getCaregiverUsername() {
         return caregiverUsername;
     }
