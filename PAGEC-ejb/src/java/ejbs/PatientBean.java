@@ -132,61 +132,6 @@ public class PatientBean {
     }
     
     
-    public void enrollProcedure(int patientId, int procedureId){
-        try {
-
-            Procedure procedure = em.find(Procedure.class, procedureId);
-            if (procedure == null) {
-                throw new EntityDoesNotExistsException("There is no training material with that username.");
-            }
-
-            Patient patient = em.find(Patient.class, patientId);
-            if (patient == null) {
-                throw new EntityDoesNotExistsException("There is no need with that code.");
-            }
-
-            if (procedure.getPatients().contains(patient)) {
-                throw new Exception("Patient's course has no such need.");
-            }
-
-            if (patient.getProcedures().contains(procedure)) {
-                throw new Exception("Patient is already enrolled in that need.");
-            }
-
-            procedure.addPatient(patient);
-            patient.addProcedure(procedure);
-            
-
-        } catch (Exception e) {
-            throw new EJBException(e.getMessage());
-        }
-    }
-    
-/*
-    public void unrollProcedure(int patientId, int procedureId){
-        try {
-            Patient patient = em.find(Patient.class, patientId);
-            if(patient == null){
-                throw new EntityDoesNotExistsException("There is no need with that code.");
-            }            
-            
-            Procedure procedure = em.find(Procedure.class, procedureId);
-            if(procedure == null){
-                throw new EntityDoesNotExistsException("There is no patient with that username.");
-            }
-            
-            if(!patient.getProcedures().contains(procedure)){
-                throw new Exception("Patient not enrolled");
-            }            
-            
-            patient.removeProcedure(procedure);
-            procedure.removePatient(patient);
-            
-        } catch (Exception e) {
-            throw new EJBException(e.getMessage());
-        }
-    }
-*/
     List<PatientDTO> patientsToDTOs(List<Patient> patients) {
         
         List<PatientDTO> dtos = new ArrayList<>();

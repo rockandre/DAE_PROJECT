@@ -32,6 +32,7 @@ public class ConfigBean {
     public void populateBD() {
 
         try {
+            
             administratorBean.create("a1", "a1", "a1", "a1@ipleiria.pt");
             administratorBean.create("a2", "a2", "a2", "a2@ipleiria.pt");
             administratorBean.create("a3", "a3", "a3", "a3@ipleiria.pt");
@@ -66,9 +67,8 @@ public class ConfigBean {
             
             //needBean.unrollPatient(1, 1);
             
-            procedureBean.create(1, "Arranjar uma perna", "Fazer estalar 3 vezes para o lado esquerdo e depois uma para o direito!");
+            procedureBean.create(1, 2, "11111", 1);
             
-            patientBean.enrollProcedure(1, 1);
 
             
         } catch (Exception e) {

@@ -6,11 +6,15 @@
 package entities;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
@@ -24,12 +28,10 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author joaop
  */
 @Entity
-@Table(name = "PROCEDURES",
-        uniqueConstraints
-        = @UniqueConstraint(columnNames = {"NAME"}))
+@Table(name = "PROCEDURES")
 @NamedQueries({
     @NamedQuery(name = "getAllProcedures",
-    query = "SELECT c FROM Procedure c ORDER BY c.name"),
+    query = "SELECT c FROM Procedure c ORDER BY c.id"),
     //@NamedQuery(name = "getAllCoursesNames",
     //query = "SELECT c.name FROM Course c ORDER BY c.name")
 })
@@ -38,23 +40,31 @@ public class Procedure implements Serializable {
 
     @Id
     private int id;
-    @NotNull (message = "Training Material name must not be empty")
-    private String name;
     
-    private String descricao;
+    @NotNull
+    private Date date; //mudar
+    @ManyToOne
+    @JoinColumn(name = "PATIENT_ID")
+    private Patient patient;
     
-    @ManyToMany(mappedBy = "procedures")
-    List<Patient> patients;
+    @ManyToOne
+    @JoinColumn(name = "CAREGIVER_ID")
+    private Caregiver caregiver;
+    
+    @ManyToOne
+    @JoinColumn(name = "TRAININGMATERIAL_ID")
+    private TrainingMaterial trainingMaterial;
+    
 
     public Procedure() {
-        patients = new LinkedList<>();
     }
 
-    public Procedure(int id, String name, String descricao) {
+    public Procedure(int id, Patient patient, Caregiver caregiver, TrainingMaterial trainingMaterial) {
         this.id = id;
-        this.name = name;
-        this.descricao = descricao;
-        this.patients = new LinkedList<>();
+        this.date = new Date();
+        this.patient = patient;
+        this.caregiver = caregiver;
+        this.trainingMaterial = trainingMaterial;
     }
 
     public int getId() {
@@ -65,39 +75,39 @@ public class Procedure implements Serializable {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public Date getDate() {
+        return date;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setDate(Date date) {
+        this.date = date;
     }
 
-    public String getDescricao() {
-        return descricao;
+    public Patient getPatient() {
+        return patient;
     }
 
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
+    public void setPatient(Patient patient) {
+        this.patient = patient;
     }
 
-
-    @XmlTransient
-    public List<Patient> getPatients() {
-        return patients;
+    public Caregiver getCaregiver() {
+        return caregiver;
     }
 
-    public void setPatients(List<Patient> patients) {
-        this.patients = patients;
+    public void setCaregiver(Caregiver caregiver) {
+        this.caregiver = caregiver;
     }
+
+    public TrainingMaterial getTrainingMaterial() {
+        return trainingMaterial;
+    }
+
+    public void setTrainingMaterial(TrainingMaterial trainingMaterial) {
+        this.trainingMaterial = trainingMaterial;
+    }
+
     
-    public void addPatient(Patient patient) {
-        patients.add(patient);
-    }
-
-    public void removePatient(Patient patient) {
-        patients.remove(patient);
-    }
     
     
 }

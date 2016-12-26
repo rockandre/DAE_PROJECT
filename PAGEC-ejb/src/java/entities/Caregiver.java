@@ -32,13 +32,18 @@ public class Caregiver extends User implements Serializable {
     @OneToMany(mappedBy = "caregiver", cascade = CascadeType.REMOVE)
     private List<Patient> patients;
     
+    @OneToMany(mappedBy = "caregiver", cascade = CascadeType.REMOVE)
+    private List<Procedure> procedures; //procedimentos que aplicou!
+    
     public Caregiver() {
         patients = new LinkedList<>();
+        procedures = new LinkedList<>();
     }
 
     public Caregiver(String username, String password, String name, String email) {
         super(username, password, GROUP.Caregiver, name, email);
         patients = new LinkedList<>();
+        procedures = new LinkedList<>();
     }
 
     @XmlTransient

@@ -9,6 +9,7 @@ import enumerations.TRMAT;
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -16,6 +17,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
@@ -53,10 +55,12 @@ public class TrainingMaterial implements Serializable {
     
     private String link;
     
-    private byte[] bytes;
+    @OneToMany(mappedBy = "trainingMaterial", cascade = CascadeType.REMOVE)
+    private List<Procedure> procedures;
     
     public TrainingMaterial(){
         needs = new LinkedList<>();
+        procedures = new LinkedList<>();
     }
     
     public TrainingMaterial(int id, String name, String tipoSuporte, TRMAT tipoTM){
@@ -65,6 +69,7 @@ public class TrainingMaterial implements Serializable {
         this.tipoSuporte = tipoSuporte;
         this.tipoTM = tipoTM;
         needs = new LinkedList<>();
+        procedures = new LinkedList<>();
     }
 
     public int getId() {
@@ -114,14 +119,6 @@ public class TrainingMaterial implements Serializable {
 
     public void setLink(String link) {
         this.link = link;
-    }
-
-    public byte[] getBytes() {
-        return bytes;
-    }
-
-    public void setBytes(byte[] bytes) {
-        this.bytes = bytes;
     }
     
     public void addNeed(Need need) {

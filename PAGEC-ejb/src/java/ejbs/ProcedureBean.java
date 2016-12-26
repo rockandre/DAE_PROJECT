@@ -1,7 +1,9 @@
 package ejbs;
 
+import entities.Caregiver;
 import entities.Patient;
 import entities.Procedure;
+import entities.TrainingMaterial;
 import exceptions.EntityAlreadyExistsException;
 import exceptions.EntityDoesNotExistsException;
 import exceptions.MyConstraintViolationException;
@@ -23,16 +25,31 @@ public class ProcedureBean {
     @PersistenceContext
     private EntityManager em;
 
-    public void create(int id, String name, String descricao)
-            throws EntityAlreadyExistsException, MyConstraintViolationException {
+    public void create(int id, int patientId, String caregiverUsername, int trainingMaterialId)
+            throws EntityAlreadyExistsException, MyConstraintViolationException, EntityDoesNotExistsException {
         try {
             if (em.find(Procedure.class, id) != null) {
                 throw new EntityAlreadyExistsException("A procedure with that id already exists.");
             }
+            Patient patient = em.find(Patient.class, patientId);
+            if(patient == null){
+                throw new EntityDoesNotExistsException("There is no patient with that id.");
+            }
+            
+            Caregiver caregiver = em.find(Caregiver.class, caregiverUsername);
+            if(caregiver == null){
+                throw new EntityDoesNotExistsException("There is no caregiver with that username.");
+            }
+            
+            TrainingMaterial trainingMaterial = em.find(TrainingMaterial.class, trainingMaterialId);
+            if(trainingMaterial == null){
+                throw new EntityDoesNotExistsException("There is no training material with that id.");
+            }
+            
 
-            em.persist(new Procedure(id, name, descricao));
+            em.persist(new Procedure(id, patient, caregiver, trainingMaterial));
 
-        } catch (EntityAlreadyExistsException e) {
+        } catch (EntityAlreadyExistsException | EntityDoesNotExistsException e) {
             throw e;
         } catch (ConstraintViolationException e) {
             throw new MyConstraintViolationException(Utils.getConstraintViolationMessages(e));
@@ -59,10 +76,7 @@ public class ProcedureBean {
             if (procedure == null) {
                 throw new EntityDoesNotExistsException("There is no patient with that id");
             }
-
-            for(Patient patient: procedure.getPatients()){
-                patient.removeProcedure(procedure);
-            }
+            //falta remover de onde é usada
             
             em.remove(procedure);
 
