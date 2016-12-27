@@ -4,11 +4,14 @@ import dtos.PatientDTO;
 import entities.Need;
 import entities.Patient;
 import entities.Procedure;
+import entities.TrainingMaterial;
 import exceptions.EntityAlreadyExistsException;
 import exceptions.EntityDoesNotExistsException;
+import exceptions.EntityEnrolledException;
 import exceptions.MyConstraintViolationException;
 import exceptions.Utils;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import javax.ejb.EJBException;
 import javax.ejb.Stateless;
@@ -74,8 +77,8 @@ public class PatientBean {
         }
     }
     
-    public void enrollNeed(int patientId, int needId) {
-            
+    public void enrollNeed(int patientId, int needId) 
+            throws EntityDoesNotExistsException, EntityEnrolledException{
         try {
             Patient patient = em.find(Patient.class, patientId);
             if (patient == null) {
@@ -88,17 +91,18 @@ public class PatientBean {
             }
 
             if (patient.getNeeds().contains(need)) {
-                return;//throw new Exception("Patient's course has no such need.");
+                throw new EntityEnrolledException("That need is already associated to that patient");
             }
 
             if (need.getPatients().contains(patient)) {
-                return;//throw new Exception("Patient is already enrolled in that need.");
+                throw new EntityEnrolledException("That patient is already associated to that need");
             }
 
             need.addPatient(patient);
             patient.addNeed(need);
 
-        
+        } catch (EntityDoesNotExistsException | EntityEnrolledException e) {
+            throw e;
         } catch (Exception e) {
             throw new EJBException(e.getMessage());
         }
@@ -147,5 +151,44 @@ public class PatientBean {
         }
         
         return dtos;
+    }
+    
+    public List<Need> getNeeds(int patientId) throws EntityDoesNotExistsException{
+        try {
+            Patient patient = em.find(Patient.class, patientId);
+            if (patient == null) {
+                throw new EntityDoesNotExistsException("There is no patient with that id.");
+            }           
+            List<Need> needs = (List<Need>) patient.getNeeds();
+            return needs;
+        } catch (EntityDoesNotExistsException e) {
+            throw e;             
+        } catch (Exception e) {
+            throw new EJBException(e.getMessage());
+        }
+    }
+    
+    public List<Need> getUnrolledNeeds(int patientId) 
+            throws EntityDoesNotExistsException{
+        try {
+            List<Need> needs = (List<Need>) em.createNamedQuery("getAllNeeds").getResultList();
+            Patient patient = em.find(Patient.class, patientId);
+            if (patient == null) {
+                throw new EntityDoesNotExistsException("There is no patient with that id.");
+            }   
+            List<Need> patientNeeds = patient.getNeeds();
+            LinkedList<Need> result = new LinkedList<>();
+            for(Need need: needs){
+                if(!patientNeeds.contains(need)){
+                    result.add(need);
+                }
+            }
+
+            return result; 
+        } catch (EntityDoesNotExistsException e) {
+            throw e;  
+        } catch (Exception e) {
+            throw new EJBException(e.getMessage());
+        }
     }
 }

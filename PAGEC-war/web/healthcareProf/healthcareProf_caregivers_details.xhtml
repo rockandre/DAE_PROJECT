@@ -34,7 +34,7 @@
             summary="Enrolled patients"
             value="#{healtcareProfManager.enrolledPatients}"
             rules="all"
-            cellpadding="5">
+            cellpadding="6">
 
             <f:facet name="header">
                 <h:outputText value="Enrolled patients" />
@@ -53,7 +53,98 @@
                     <h:outputText value="Name" />
                 </f:facet>
                 <h:outputText value="#{patient.name}" />
-            </h:column>                       
+            </h:column>   
+            
+            <h:column>
+                <f:facet name="header">
+                    <h:outputText value="Needs" />
+                </f:facet>
+                <h:dataTable
+            var="need"
+            summary="Patient Needs"
+            value="#{healtcareProfManager.getPatientNeeds(patient.id)}"
+            rules="all"
+            cellpadding="5">
+
+            <f:facet name="header">
+                <h:outputText value="Patient Needs" />
+            </f:facet>
+
+            <h:column>
+                <f:facet name="header">
+                    <h:outputText value="ID" />
+                </f:facet>
+                <h:outputText value="#{need.id}" />
+                <!--Falta validar o formato-->
+            </h:column>
+
+            <h:column>
+                <f:facet name="header">
+                    <h:outputText value="Name" />
+                </f:facet>
+                <h:outputText value="#{need.name}" />
+            </h:column>
+                      
+
+            <h:column>
+                <f:facet name="header">
+                    <h:outputText value="Actions" />
+                </f:facet>
+                <h:form>
+                    <h:commandLink value="Disassociate" actionListener="#{healtcareProfManager.unrollPatientNeed}">
+                        <f:param name="needId" id="needId" value="#{need.id}" />
+                        <f:param name="needId" id="patientId" value="#{patient.id}" />
+                    </h:commandLink>
+                </h:form>
+            </h:column>
+              
+                <br/>
+                    <!-- aaaaaa -->
+        </h:dataTable> 
+                <br/>
+              
+            <h:dataTable
+            var="need"
+            summary="Needs"
+            value="#{healtcareProfManager.getPatientNotNeeds(patient.id)}"
+            rules="all"
+            cellpadding="5">
+
+            <f:facet name="header">
+                <h:outputText value="Needs" />
+            </f:facet>
+
+            <h:column>
+                <f:facet name="header">
+                    <h:outputText value="ID" />
+                </f:facet>
+                <h:outputText value="#{need.id}" />
+                <!--Falta validar o formato-->
+            </h:column>
+
+            <h:column>
+                <f:facet name="header">
+                    <h:outputText value="Name" />
+                </f:facet>
+                <h:outputText value="#{need.name}" />
+            </h:column>
+                      
+
+            <h:column>
+                <f:facet name="header">
+                    <h:outputText value="Actions" />
+                </f:facet>
+                <h:form>
+                    <h:commandLink value="Associate" actionListener="#{healtcareProfManager.enrollPatientNeed}">
+                        <f:param name="needId" id="needId" value="#{need.id}" />
+                        <f:param name="needId" id="patientId" value="#{patient.id}" />
+                    </h:commandLink>
+                </h:form>
+            </h:column>
+
+        </h:dataTable>  
+                
+            </h:column>  
 
             <h:column>
                 <f:facet name="header">

@@ -67,8 +67,4 @@
         <description/>
         <role-name>HealthcareProf</role-name>
     </security-role>
-    <security-role>
-        <description/>
-        <role-name>Caregiver</role-name>
-    </security-role>
 </web-app>

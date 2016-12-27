@@ -4,6 +4,8 @@ import entities.Need;
 import entities.TrainingMaterial;
 import exceptions.EntityAlreadyExistsException;
 import exceptions.EntityDoesNotExistsException;
+import exceptions.EntityEnrolledException;
+import exceptions.EntityNotEnrolledException;
 import exceptions.MyConstraintViolationException;
 import exceptions.Utils;
 import java.util.List;
@@ -74,7 +76,7 @@ public class NeedBean {
     }
     
     public void enrollTrainingMaterial(int needId, int trainingMaterialId) 
-            throws EntityDoesNotExistsException{
+            throws EntityDoesNotExistsException, EntityEnrolledException{
         try {
 
             TrainingMaterial trainingMaterial = em.find(TrainingMaterial.class, trainingMaterialId);
@@ -88,24 +90,25 @@ public class NeedBean {
             }
 
             if (trainingMaterial.getNeeds().contains(need)) {
-                throw new Exception("Patient's course has no such need.");
+                throw new EntityEnrolledException("That training material already has that need!");
             }
 
             if (need.getTrainingMaterials().contains(trainingMaterial)) {
-                throw new Exception("Patient is already enrolled in that need.");
+                throw new EntityEnrolledException("Patient is already enrolled in that need.");
             }
 
             need.addTrainingMaterial(trainingMaterial);
             trainingMaterial.addNeed(need);
 
-        } catch (EntityDoesNotExistsException e) {
+        } catch (EntityDoesNotExistsException | EntityEnrolledException e) {
             throw e;
         } catch (Exception e) {
             throw new EJBException(e.getMessage());
         }
     }
 
-    public void unrollTrainingMaterial(int needId, int trainingMaterialId){
+    public void unrollTrainingMaterial(int needId, int trainingMaterialId)
+            throws EntityDoesNotExistsException, EntityNotEnrolledException{
         try {
             Need need = em.find(Need.class, needId);
             if(need == null){
@@ -118,12 +121,13 @@ public class NeedBean {
             }
             
             if(!need.getTrainingMaterials().contains(trainingMaterial)){
-                throw new Exception("Patient not enrolled");
+                throw new EntityNotEnrolledException("Patient not enrolled");
             }            
             
             need.removeTrainingMaterial(trainingMaterial);
             trainingMaterial.removeNeed(need);
-            
+        } catch (EntityDoesNotExistsException | EntityNotEnrolledException e) {
+            throw e;
         } catch (Exception e) {
             throw new EJBException(e.getMessage());
         }

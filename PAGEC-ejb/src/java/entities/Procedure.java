@@ -83,6 +83,7 @@ public class Procedure implements Serializable {
         this.date = date;
     }
 
+    
     public Patient getPatient() {
         return patient;
     }

@@ -4,14 +4,21 @@ import dtos.PatientDTO;
 import ejbs.AdministratorBean;
 import ejbs.CaregiverBean;
 import ejbs.HealthcareProfBean;
+import ejbs.NeedBean;
 import ejbs.PatientBean;
+import ejbs.TrainingMaterialBean;
 import entities.Administrator;
 import entities.Caregiver;
 import entities.HealthcareProf;
+import entities.Need;
 import entities.Patient;
+import entities.TrainingMaterial;
+import enumerations.TRMAT;
 import exceptions.EntityAlreadyExistsException;
 import exceptions.EntityDoesNotExistsException;
+import exceptions.EntityEnrolledException;
 import exceptions.MyConstraintViolationException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 import javax.ejb.EJB;
@@ -35,14 +42,23 @@ public class HealtcareProfManager {
 
     @EJB
     private CaregiverBean caregiverBean;
+    @EJB
+    private TrainingMaterialBean trainingMaterialBean;
+    @EJB
+    private NeedBean needBean;
+    @EJB
+    private PatientBean patientBean;
     private static final Logger logger = Logger.getLogger("web.HealthcareProfManager");
     private Caregiver currentCaregiver;
     private Caregiver newCaregiver;
+    private TrainingMaterial currentTrainingMaterial;
+    private TrainingMaterial newTrainingMaterial;
     private UIComponent component;
     private Client client;
     private final String baseUri = "http://localhost:8080/AcademicManagement_FICHA6-war/webapi";
     public HealtcareProfManager() {
         newCaregiver= new Caregiver();
+        newTrainingMaterial = new TrainingMaterial();
         client = ClientBuilder.newClient();
     }
 
@@ -147,9 +163,159 @@ public class HealtcareProfManager {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
         }
     }
+                                //NEEDS
     
+    public List<Need> getPatientNeeds(int id) {
+        try {
+            return patientBean.getNeeds(id);
+        } catch (EntityDoesNotExistsException e) {
+            FacesExceptionHandler.handleException(e, e.getMessage(), logger);
+        } catch (Exception e) {
+            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
+        }
+        return null;
+    }
     
+    public List<Need> getPatientNotNeeds(int id) {
+        try {
+            return patientBean.getUnrolledNeeds(id);
+        } catch (EntityDoesNotExistsException e) {
+            FacesExceptionHandler.handleException(e, e.getMessage(), logger);
+        } catch (Exception e) {
+            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
+        }
+        return null;
+    }
     
+    public void unrollPatientNeed(ActionEvent event) {
+        try {
+            UIParameter param = (UIParameter) event.getComponent().findComponent("needId");
+            int needId  = Integer.parseInt(param.getValue().toString());
+            UIParameter param2 = (UIParameter) event.getComponent().findComponent("patientId");
+            int patientId  = Integer.parseInt(param2.getValue().toString());
+            patientBean.unrollNeed(patientId, needId);
+        } catch (EntityDoesNotExistsException e) {
+            FacesExceptionHandler.handleException(e, e.getMessage(), logger);
+        } catch (Exception e) {
+            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
+        }
+    }
+    
+    public void enrollPatientNeed(ActionEvent event) {
+        try {
+            UIParameter param = (UIParameter) event.getComponent().findComponent("needId");
+            int needId  = Integer.parseInt(param.getValue().toString());
+            UIParameter param2 = (UIParameter) event.getComponent().findComponent("patientId");
+            int patientId  = Integer.parseInt(param2.getValue().toString());
+            patientBean.enrollNeed(patientId, needId);
+        } catch (EntityDoesNotExistsException | EntityEnrolledException e) {
+            FacesExceptionHandler.handleException(e, e.getMessage(), logger);
+        } catch (Exception e) {
+            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
+        }
+    }
+
+    
+    //TRAINING MATERIALS
+    public List<TrainingMaterial> getAllTrainingMaterials() {
+        try {
+            return trainingMaterialBean.getAll();
+        } catch (Exception e) {
+            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
+        }
+        return null;
+    }
+    
+    public String createTrainingMaterial() {
+        try {
+            trainingMaterialBean.create(
+                    newTrainingMaterial.getId(),
+                    newTrainingMaterial.getName(),
+                    newTrainingMaterial.getTipoTM(),
+                    newTrainingMaterial.getLink());
+            return "/faces/healthcareProf/healthcareProf_index?faces-redirect=true";
+        } catch (EntityAlreadyExistsException | MyConstraintViolationException e) {
+            FacesExceptionHandler.handleException(e, e.getMessage(), component, logger);
+        } catch (Exception e) {
+            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", component, logger);
+        }
+        return null;
+    }
+    
+    public String updateTrainingMaterial() {
+        try {
+            trainingMaterialBean.update(
+                    currentTrainingMaterial.getId(),
+                    currentTrainingMaterial.getName(),
+                    currentTrainingMaterial.getTipoTM(),
+                    currentTrainingMaterial.getLink());
+            return "/faces/healthcareProf/healthcareProf_index?faces-redirect=true";
+
+        } catch (EntityDoesNotExistsException | MyConstraintViolationException e) {
+            FacesExceptionHandler.handleException(e, e.getMessage(), logger);
+        } catch (Exception e) {
+            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
+        }
+        return "healthcareProf_trainingmaterials_update";
+    }
+    
+    public void removeTrainingMaterial(ActionEvent event) {
+        try {
+            UIParameter param = (UIParameter) event.getComponent().findComponent("trainingMaterialId");
+            int id  = Integer.parseInt(param.getValue().toString());
+            trainingMaterialBean.remove(id);
+        } catch (EntityDoesNotExistsException e) {
+            FacesExceptionHandler.handleException(e, e.getMessage(), logger);
+        } catch (Exception e) {
+            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
+        }
+    }
+    
+                            //NEEDS
+    
+    public List<Need> getEnrolledNeeds() {
+        try {
+            return trainingMaterialBean.getEnrolledNeeds(currentTrainingMaterial.getId());
+        } catch (EntityDoesNotExistsException e) {
+            FacesExceptionHandler.handleException(e, e.getMessage(), logger);
+        } catch (Exception e) {
+            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
+        }
+        return null;
+    }
+
+    public List<Need> getAllNeeds() {
+        try {
+            return needBean.getAll();
+        } catch (Exception e) {
+            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
+        }
+        return null;
+    }
+
+    public void enrollNeed(ActionEvent event) {
+        try {
+            UIParameter param = (UIParameter) event.getComponent().findComponent("needId");
+            int id  = Integer.parseInt(param.getValue().toString());
+            needBean.enrollTrainingMaterial(id, currentTrainingMaterial.getId());
+        } catch (EntityDoesNotExistsException | EntityEnrolledException e) {
+            FacesExceptionHandler.handleException(e, e.getMessage(), logger);
+        } catch (Exception e) {
+            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
+        }
+    }
+
+    public void unrollNeed(ActionEvent event) {
+        try {
+            UIParameter param = (UIParameter) event.getComponent().findComponent("needId");
+            int id  = Integer.parseInt(param.getValue().toString());
+            needBean.unrollTrainingMaterial(id, currentTrainingMaterial.getId());
+        } catch (EntityDoesNotExistsException e) {
+            FacesExceptionHandler.handleException(e, e.getMessage(), logger);
+        } catch (Exception e) {
+            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
+        }
+    }
     
     
     // GETTERS E SETTERS
@@ -170,8 +336,26 @@ public class HealtcareProfManager {
     public void setNewCaregiver(Caregiver newCaregiver) {
         this.newCaregiver = newCaregiver;
     }
+
+    public TrainingMaterial getCurrentTrainingMaterial() {
+        return currentTrainingMaterial;
+    }
+
+    public void setCurrentTrainingMaterial(TrainingMaterial currentTrainingMaterial) {
+        this.currentTrainingMaterial = currentTrainingMaterial;
+    }
+
+    public TrainingMaterial getNewTrainingMaterial() {
+        return newTrainingMaterial;
+    }
+
+    public void setNewTrainingMaterial(TrainingMaterial newTrainingMaterial) {
+        this.newTrainingMaterial = newTrainingMaterial;
+    }
     
-    
+    public TRMAT[] getTRMATs() {
+        return TRMAT.values();
+    }
     
     
     public UIComponent getComponent() {

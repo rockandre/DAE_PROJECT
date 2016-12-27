@@ -74,6 +74,7 @@ public class Need implements Serializable {
         trainingMaterials = new LinkedList<>();
     }
 
+    
     public int getId() {
         return id;
     }

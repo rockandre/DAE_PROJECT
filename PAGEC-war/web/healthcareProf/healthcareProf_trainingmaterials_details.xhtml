@@ -1,0 +1,140 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <h:head>
+        <title>PAGEC</title>
+    </h:head>
+    <h:body>
+        <h:panelGrid columns="2">
+
+            <h:outputLabel for="username" value="Id: " />
+            <h:outputText 
+                id="id"
+                value="#{healtcareProfManager.currentTrainingMaterial.id}"/>
+
+            <h:outputLabel for="name" value="Name: " />
+            <h:outputText 
+                id="name"
+                value="#{healtcareProfManager.currentTrainingMaterial.name}"/>
+
+            <h:outputLabel for="tipoTM" value="Type: " />
+            <h:outputText 
+                id="tipoTM"
+                value="#{healtcareProfManager.currentTrainingMaterial.tipoTM}"/>
+            
+            <h:outputLabel for="link" value="Link: " />
+            <h:outputText 
+                id="link"
+                value="#{healtcareProfManager.currentTrainingMaterial.link}"/>
+
+
+        </h:panelGrid>
+        
+        <br/>        
+
+        <br/>        
+
+        <h:dataTable
+            var="need"
+            summary="Associated need"
+            value="#{healtcareProfManager.enrolledNeeds}"
+            rules="all"
+            cellpadding="5">
+
+            <f:facet name="header">
+                <h:outputText value="Associated needs" />
+            </f:facet>
+
+            <h:column>
+                <f:facet name="header">
+                    <h:outputText value="ID" />
+                </f:facet>
+                <h:outputText value="#{need.id}" />
+                <!--Falta validar o formato-->
+            </h:column>
+
+            <h:column>
+                <f:facet name="header">
+                    <h:outputText value="Name" />
+                </f:facet>
+                <h:outputText value="#{need.name}" />
+            </h:column>                       
+
+            <h:column>
+                <f:facet name="header">
+                    <h:outputText value="Actions" />
+                </f:facet>
+                <h:form>
+                    <h:commandLink value="Disassociate" actionListener="#{healtcareProfManager.unrollNeed}">
+                        <f:param name="needId" id="needId" value="#{need.id}" />
+                    </h:commandLink>
+                </h:form>
+            </h:column>
+
+        </h:dataTable>            
+
+        <br/>
+        <br/>
+        
+        <br/>
+
+        <h:dataTable
+            var="need"
+            summary="Needs"
+            value="#{healtcareProfManager.allNeeds}"
+            rules="all"
+            cellpadding="5">
+
+            <f:facet name="header">
+                <h:outputText value="All needs" />
+            </f:facet>
+
+            <h:column>
+                <f:facet name="header">
+                    <h:outputText value="ID" />
+                </f:facet>
+                <h:outputText value="#{need.id}" />
+                <!--Falta validar o formato-->
+            </h:column>
+
+            <h:column>
+                <f:facet name="header">
+                    <h:outputText value="Name" />
+                </f:facet>
+                <h:outputText value="#{need.name}" />
+            </h:column>
+                      
+
+            <h:column>
+                <f:facet name="header">
+                    <h:outputText value="Actions" />
+                </f:facet>
+                <h:form>
+                    <h:commandLink value="Associate" actionListener="#{healtcareProfManager.enrollNeed}">
+                        <f:param name="needId" id="needId" value="#{need.id}" />
+                    </h:commandLink>
+                </h:form>
+            </h:column>
+
+        </h:dataTable>            
+        
+        
+        <br/>
+
+
+        <br/>
+
+        <h:form>                  
+            <h:commandLink
+                id="return"
+                value="Return"
+                action="/faces/healtcareProf/healtcareProf_index?faces-redirect=true" />
+        </h:form>
+
+        <h:messages errorStyle="color: red" />        
+        
+    </h:body>
+</html>
+

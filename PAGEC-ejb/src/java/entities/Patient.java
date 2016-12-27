@@ -66,6 +66,15 @@ public class Patient implements Serializable {
         this.procedures = new LinkedList<>();
     }
 
+    public List<Procedure> getProcedures() {
+        return procedures;
+    }
+
+    public void setProcedures(List<Procedure> procedures) {
+        this.procedures = procedures;
+    }
+
+    
     public int getId() {
         return id;
     }

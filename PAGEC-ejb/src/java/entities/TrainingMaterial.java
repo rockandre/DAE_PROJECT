@@ -49,8 +49,6 @@ public class TrainingMaterial implements Serializable {
     @ManyToMany(mappedBy = "trainingMaterials")
     private List<Need> needs;
     
-    private String tipoSuporte;
-    
     private TRMAT tipoTM;
     
     private String link;
@@ -63,11 +61,11 @@ public class TrainingMaterial implements Serializable {
         procedures = new LinkedList<>();
     }
     
-    public TrainingMaterial(int id, String name, String tipoSuporte, TRMAT tipoTM){
+    public TrainingMaterial(int id, String name, TRMAT tipoTM, String link){
         this.id = id;
         this.name = name;
-        this.tipoSuporte = tipoSuporte;
         this.tipoTM = tipoTM;
+        this.link = link;
         needs = new LinkedList<>();
         procedures = new LinkedList<>();
     }
@@ -80,6 +78,16 @@ public class TrainingMaterial implements Serializable {
         this.id = id;
     }
 
+    public List<Procedure> getProcedures() {
+        return procedures;
+    }
+
+    public void setProcedures(List<Procedure> procedures) {
+        this.procedures = procedures;
+    }
+
+    
+    
     public String getName() {
         return name;
     }
@@ -97,13 +105,6 @@ public class TrainingMaterial implements Serializable {
         this.needs = needs;
     }
 
-    public String getTipoSuporte() {
-        return tipoSuporte;
-    }
-
-    public void setTipoSuporte(String tipoSuporte) {
-        this.tipoSuporte = tipoSuporte;
-    }
 
     public TRMAT getTipoTM() {
         return tipoTM;
@@ -128,5 +129,7 @@ public class TrainingMaterial implements Serializable {
     public void removeNeed(Need need) {
         needs.remove(need);
     }
+    
+    
     
 }

@@ -51,9 +51,20 @@ public class Caregiver extends User implements Serializable {
         return patients;
     }
 
+    
     public void setPatients(List<Patient> patients) {
         this.patients = patients;
     }
+
+    public List<Procedure> getProcedures() {
+        return procedures;
+    }
+
+    public void setProcedures(List<Procedure> procedures) {
+        this.procedures = procedures;
+    }
+    
+    
     
     public void addPatient(Patient patient) {
         patients.add(patient);

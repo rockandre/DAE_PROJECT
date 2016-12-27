@@ -46,28 +46,39 @@ public class ConfigBean {
             patientBean.create(3, "Pato");
             patientBean.create(4, "Crocodilo");
             patientBean.create(5, "Tubarão");
-            
-            needBean.create(1, "Alcool");
-            
-            patientBean.enrollNeed(1, 1);
-
             caregiverBean.create("11111", "123456789", "André", "1111@11111.com");
             caregiverBean.create("11121", "123456789", "João", "1141@11111.com");
             caregiverBean.create("11131", "123456789", "Rodrigo", "1131@11111.com");
             caregiverBean.create("11141", "123456789", "Jaquim", "1121@11111.com");
-            
-            caregiverBean.enrollPatient("11111", 1);
-            caregiverBean.enrollPatient("11111", 2);
-            caregiverBean.enrollPatient("11111", 3);
-            caregiverBean.unrollPatient("11111", 3);
-            
-            trainingMaterialBean.create(1, "Respiracao boca a boca", "Suporte Basico de Vida", TRMAT.VIDEO);
+            needBean.create(1, "Alcool");
+            needBean.create(2, "Diabetes");
+            needBean.create(3, "Lesão");
+            needBean.create(4, "Dor de cabeca");
+            needBean.create(5, "Pouca visão");
+            trainingMaterialBean.create(1, "Como beber vinho", TRMAT.VIDEO, "http://cenas.pt/");
+            trainingMaterialBean.create(2, "Como tomar insulina", TRMAT.QUESTIONARIO, "http://cenas.pt/");
+            trainingMaterialBean.create(3, "Treinar musculos lesionados", TRMAT.TEXT, "http://cenas.pt/");
+            trainingMaterialBean.create(4, "Como fazer massagens na cabeca", TRMAT.TURORIAL, "http://cenas.pt/");
+            trainingMaterialBean.create(5, "Como meter gotas nos olhos", TRMAT.TURORIAL, "http://cenas.pt/");
             
             needBean.enrollTrainingMaterial(1, 1);
+            needBean.enrollTrainingMaterial(2, 2);
+            needBean.enrollTrainingMaterial(3, 3);
+            //needBean.enrollTrainingMaterial(4, 4);
+            //needBean.enrollTrainingMaterial(5, 5);
+                    
+            patientBean.enrollNeed(1, 1);
+            patientBean.enrollNeed(1, 2);
+            patientBean.enrollNeed(1, 3);
+            patientBean.enrollNeed(2, 2);
+            patientBean.enrollNeed(3, 3);
+            //patientBean.enrollNeed(4, 4);
+            //patientBean.enrollNeed(5, 5);
             
-            //needBean.unrollPatient(1, 1);
             
-            procedureBean.create(1, 2, "11111", 1);
+            caregiverBean.enrollPatient("11111", 1);
+            //caregiverBean.enrollPatient("11111", 2);
+            //caregiverBean.enrollPatient("11111", 3);
             
 
             
