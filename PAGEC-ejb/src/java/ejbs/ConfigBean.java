@@ -46,10 +46,10 @@ public class ConfigBean {
             patientBean.create(3, "Pato");
             patientBean.create(4, "Crocodilo");
             patientBean.create(5, "Tubarão");
-            caregiverBean.create("11111", "123456789", "André", "1111@11111.com");
-            caregiverBean.create("11121", "123456789", "João", "1141@11111.com");
-            caregiverBean.create("11131", "123456789", "Rodrigo", "1131@11111.com");
-            caregiverBean.create("11141", "123456789", "Jaquim", "1121@11111.com");
+            caregiverBean.create("c1", "c1", "André", "1111@11111.com");
+            caregiverBean.create("c2", "c2", "João", "1141@11111.com");
+            caregiverBean.create("c3", "c3", "Rodrigo", "1131@11111.com");
+            caregiverBean.create("c4", "c4", "Jaquim", "1121@11111.com");
             needBean.create(1, "Alcool");
             needBean.create(2, "Diabetes");
             needBean.create(3, "Lesão");
@@ -76,9 +76,16 @@ public class ConfigBean {
             //patientBean.enrollNeed(5, 5);
             
             
-            caregiverBean.enrollPatient("11111", 1);
-            //caregiverBean.enrollPatient("11111", 2);
+            caregiverBean.enrollPatient("c1", 1);
+            caregiverBean.enrollPatient("c1", 2);
+            caregiverBean.enrollPatient("c2", 3);
             //caregiverBean.enrollPatient("11111", 3);
+            
+            procedureBean.create(1, 1, "c1", 1);
+            procedureBean.create(2, 1, "c1", 1);
+            procedureBean.create(3, 1, "c1", 2);
+            procedureBean.create(4, 1, "c2", 1);
+            procedureBean.create(5, 1, "c2", 2);
             
 
             

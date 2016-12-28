@@ -46,6 +46,9 @@ public class UserManager {
         if(isUserInRole("HealthcareProf")){
         return "/faces/healthcareProf/healthcareProf_index?faces-redirect=true";
         }
+        if(isUserInRole("Caregiver")){
+        return "/faces/caregiver/caregiver_index?faces-redirect=true";
+        }
         return "error?faces-redirect=true";
     }
 

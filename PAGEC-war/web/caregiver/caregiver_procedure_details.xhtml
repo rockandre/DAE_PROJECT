@@ -1,0 +1,56 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <h:head>
+        <title>PAGEC</title>
+    </h:head>
+    <h:body>
+        <h:panelGrid columns="2">
+
+            <h:outputLabel for="username" value="Id: " />
+            <h:outputText 
+                id="id"
+                value="#{caregiverManager.currentProcedure.id}"/>
+
+            <h:outputLabel for="date" value="Date: " />
+            <h:outputText 
+                id="name"
+                value="#{caregiverManager.currentProcedure.date}"/>
+
+            <h:outputLabel for="name" value="Patient name: " />
+            <h:outputText 
+                id="patientName"
+                value="#{caregiverManager.currentProcedure.patient.name}"/>
+            
+            <h:outputLabel for="name" value="Caregiver name: " />
+            <h:outputText 
+                id="caregiverName"
+                value="#{caregiverManager.currentProcedure.caregiver.name}"/>
+            
+            <h:outputLabel for="name" value="Training Material name: " />
+            <h:outputText 
+                id="trainingMaterialName"
+                value="#{caregiverManager.currentProcedure.trainingMaterial.name}"/>
+            
+
+        </h:panelGrid>
+        
+        <!-- aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa -->
+        <br/>        
+
+        <br/>
+
+        <h:form>                  
+            <h:commandLink
+                id="return"
+                value="Return"
+                action="/faces/caregiver/caregiver_index?faces-redirect=true" />
+        </h:form>
+
+        <h:messages errorStyle="color: red" />        
+        
+    </h:body>
+</html>
+

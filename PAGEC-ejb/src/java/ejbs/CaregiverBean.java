@@ -7,7 +7,9 @@ package ejbs;
 
 import entities.Administrator;
 import entities.Caregiver;
+import entities.Need;
 import entities.Patient;
+import entities.TrainingMaterial;
 import entities.User;
 import exceptions.EntityAlreadyExistsException;
 import exceptions.EntityDoesNotExistsException;
@@ -15,6 +17,7 @@ import exceptions.EntityEnrolledException;
 import exceptions.EntityNotEnrolledException;
 import exceptions.MyConstraintViolationException;
 import exceptions.Utils;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import javax.ejb.EJBException;
@@ -67,9 +70,9 @@ public class CaregiverBean {
         }
     }
     
-    public Caregiver getCaregiver(int code) {
+    public Caregiver getCaregiver(String username) {
         try {
-            Caregiver caregiver = em.find(Caregiver.class, code);
+            Caregiver caregiver = em.find(Caregiver.class, username);
             
             return caregiver;
         } catch (Exception e) {
@@ -230,5 +233,39 @@ public class CaregiverBean {
         } catch (Exception e) {
             throw new EJBException(e.getMessage());
         }
+    }
+
+    public List<TrainingMaterial> getCaregiverTrainingMaterials(String username) {
+        try{
+            Caregiver caregiver = em.find(Caregiver.class, username);
+            if (caregiver == null) {
+                throw new EntityDoesNotExistsException("There is no caregiver with that username.");
+            }  
+            
+            LinkedList<TrainingMaterial> trainingMaterials = new LinkedList<>();
+            LinkedList<TrainingMaterial> trainingMaterialsClean = new LinkedList<>();
+            List<Patient> patients = (List<Patient>) caregiver.getPatients();
+            
+            List<Need> patientsNeeds = new ArrayList<>();
+            for(Patient patient: patients){
+                patientsNeeds.addAll(patient.getNeeds());
+            }
+            
+            for(Need need: patientsNeeds){
+                trainingMaterials.addAll(need.getTrainingMaterials());
+            }
+            
+            for(TrainingMaterial trainingMaterial: trainingMaterials){
+                if(!trainingMaterialsClean.contains(trainingMaterial)){
+                    trainingMaterialsClean.add(trainingMaterial);
+                }
+            }
+            
+            return trainingMaterialsClean;
+            
+        } catch (Exception e) {
+            throw new EJBException(e.getMessage());
+        }
+          
     }
 }

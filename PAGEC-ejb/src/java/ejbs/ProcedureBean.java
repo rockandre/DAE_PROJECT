@@ -87,6 +87,16 @@ public class ProcedureBean {
         }
     }
     
+    public List<Procedure> getProceduresByCaregiver(String caregiverUsername) {
+        try {
+            List<Procedure> procedures = (List<Procedure>) em.createNamedQuery("getProceduresByCaregiver")
+                    .setParameter("caregiverUsername", caregiverUsername)
+                    .getResultList();
+            return procedures;
+        } catch (Exception e) {
+            throw new EJBException(e.getMessage());
+        }
+    }
     
     
 }

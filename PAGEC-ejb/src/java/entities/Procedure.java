@@ -32,8 +32,8 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQueries({
     @NamedQuery(name = "getAllProcedures",
     query = "SELECT c FROM Procedure c ORDER BY c.id"),
-    //@NamedQuery(name = "getAllCoursesNames",
-    //query = "SELECT c.name FROM Course c ORDER BY c.name")
+    @NamedQuery(name = "getProceduresByCaregiver",
+    query = "SELECT c FROM Procedure c WHERE c.caregiver.username = :caregiverUsername")
 })
 @XmlRootElement
 public class Procedure implements Serializable {

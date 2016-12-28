@@ -55,6 +55,18 @@
             <role-name>HealthcareProf</role-name>
         </auth-constraint>
     </security-constraint>
+    <security-constraint>
+        <display-name>CaregiverConstraint</display-name>
+        <web-resource-collection>
+            <web-resource-name>Caregiver pages</web-resource-name>
+            <description/>
+            <url-pattern>/faces/caregiver/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <description/>
+            <role-name>Caregiver</role-name>
+        </auth-constraint>
+    </security-constraint>
     <login-config>
         <auth-method>BASIC</auth-method>
         <realm-name>dae_project_realm</realm-name>
@@ -66,5 +78,9 @@
     <security-role>
         <description/>
         <role-name>HealthcareProf</role-name>
+    </security-role>
+    <security-role>
+        <description/>
+        <role-name>Caregiver</role-name>
     </security-role>
 </web-app>

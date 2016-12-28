@@ -1,0 +1,137 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <h:head>
+        <title>PAGEC</title>
+    </h:head>
+    <h:body>
+
+        <h1> Hi, I'm a caregiver! </h1>
+        
+        <br/>
+        
+        <h:dataTable
+            var="trainingMaterial"
+            summary="List of Training Materials"
+            value="#{caregiverManager.caregiverTrainingMaterials(userManager.username)}"
+            rules="all"
+            cellpadding="4">
+            
+            <f:facet name="header">
+                <h:outputText value="Your Training Materials" />
+            </f:facet>            
+
+            <h:column>
+                <f:facet name="header">
+                    <h:outputText value="Id" />
+                </f:facet>
+                <h:outputText value="#{trainingMaterial.id}" />
+                <!--Falta validar o formato-->
+            </h:column>
+
+            <h:column>
+                <f:facet name="header">
+                    <h:outputText value="Name" />
+                </f:facet>
+                <h:outputText value="#{trainingMaterial.name}" />
+            </h:column>
+
+            <h:column>
+                <f:facet name="header">
+                    <h:outputText value="Type" />
+                </f:facet>
+                <h:outputText value="#{trainingMaterial.tipoTM}" />
+            </h:column>   
+            
+            <h:column>
+                <f:facet name="header">
+                    <h:outputText value="Link" />
+                </f:facet>
+                <h:outputText value="#{trainingMaterial.link}" />
+            </h:column>  
+            <h:column>
+                <f:facet name="header">
+                    <h:outputText value="Actions" />
+                </f:facet>
+                <h:form>
+                    <h:commandLink value="Did that!" action="caregiver_procedure_create?faces-redirect=true">
+                        <f:setPropertyActionListener target="#{caregiverManager.currentTrainingMaterial}" value="#{trainingMaterial}" />
+                    </h:commandLink>
+                </h:form>
+            </h:column> 
+                                          
+               
+        </h:dataTable>
+        <br/>
+        <br/>
+        
+        <h:dataTable
+            var="procedure"
+            summary="List of Procedures"
+            value="#{caregiverManager.proceduresByCaregiver(userManager.username)}"
+            rules="all"
+            cellpadding="4">
+            
+            <f:facet name="header">
+                <h:outputText value="Your Procedures" />
+            </f:facet>            
+
+            <h:column>
+                <f:facet name="header">
+                    <h:outputText value="Id" />
+                </f:facet>
+                <h:outputText value="#{procedure.id}" />
+                <!--Falta validar o formato-->
+            </h:column>
+            <h:column>
+                <f:facet name="header">
+                    <h:outputText value="Date" />
+                </f:facet>
+                <h:outputText value="#{procedure.date}" />
+                <!--Falta validar o formato-->
+            </h:column>
+            <h:column>
+                <f:facet name="header">
+                    <h:outputText value="Patient" />
+                </f:facet>
+                <h:outputText value="#{procedure.patient.name}" />
+                <!--Falta validar o formato-->
+            </h:column>
+            <h:column>
+                <f:facet name="header">
+                    <h:outputText value="Training Material" />
+                </f:facet>
+                <h:outputText value="#{procedure.trainingMaterial.name}" />
+                <!--Falta validar o formato-->
+            </h:column>
+
+            <h:column>
+                <f:facet name="header">
+                    <h:outputText value="Actions" />
+                </f:facet>
+                <h:form>
+                    <h:commandLink value="Details" action="caregiver_procedure_details?faces-redirect=true">
+                        <f:setPropertyActionListener target="#{caregiverManager.currentProcedure}" value="#{procedure}" />
+                    </h:commandLink>
+                </h:form>
+            </h:column>    
+                                          
+               
+        </h:dataTable>
+        <br/>
+        
+        
+        
+        <br/>
+        
+        <br/> 
+        <h:form>
+        <h:commandButton value="Logout" action="#{userManager.logout}" />
+        </h:form>
+        <h:messages errorStyle="color: red" />
+        
+    </h:body>
+</html>
+

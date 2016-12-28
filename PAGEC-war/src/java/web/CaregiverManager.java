@@ -6,12 +6,14 @@ import ejbs.CaregiverBean;
 import ejbs.HealthcareProfBean;
 import ejbs.NeedBean;
 import ejbs.PatientBean;
+import ejbs.ProcedureBean;
 import ejbs.TrainingMaterialBean;
 import entities.Administrator;
 import entities.Caregiver;
 import entities.HealthcareProf;
 import entities.Need;
 import entities.Patient;
+import entities.Procedure;
 import entities.TrainingMaterial;
 import enumerations.TRMAT;
 import exceptions.EntityAlreadyExistsException;
@@ -38,7 +40,7 @@ import javax.ws.rs.core.MediaType;
 
 @ManagedBean
 @SessionScoped
-public class HealtcareProfManager {
+public class CaregiverManager {
 
     @EJB
     private CaregiverBean caregiverBean;
@@ -47,77 +49,31 @@ public class HealtcareProfManager {
     @EJB
     private NeedBean needBean;
     @EJB
+    private ProcedureBean procedureBean;
+    
+    @EJB
     private PatientBean patientBean;
-    private static final Logger logger = Logger.getLogger("web.HealthcareProfManager");
+    private static final Logger logger = Logger.getLogger("web.CaregiverManager");
     private Caregiver currentCaregiver;
     private Caregiver newCaregiver;
+    private Procedure currentProcedure;
+    private Procedure newProcedure;
     private TrainingMaterial currentTrainingMaterial;
     private TrainingMaterial newTrainingMaterial;
     private UIComponent component;
     private Client client;
     private final String baseUri = "http://localhost:8080/AcademicManagement_FICHA6-war/webapi";
-    public HealtcareProfManager() {
+    public CaregiverManager() {
         newCaregiver= new Caregiver();
         newTrainingMaterial = new TrainingMaterial();
+        newProcedure = new Procedure();
         client = ClientBuilder.newClient();
     }
 
     
     
-    //CAREGIVERS
-    public List<Caregiver> getAllCaregivers() {
-        try {
-            return caregiverBean.getAll();
-        } catch (Exception e) {
-            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
-        }
-        return null;
-    }
     
-    public String createCaregiver() {
-        try {
-            caregiverBean.create(
-                    newCaregiver.getUsername(),
-                    newCaregiver.getPassword(),
-                    newCaregiver.getName(),
-                    newCaregiver.getEmail());
-            return "/faces/healthcareProf/healthcareProf_index?faces-redirect=true";
-        } catch (EntityAlreadyExistsException | MyConstraintViolationException e) {
-            FacesExceptionHandler.handleException(e, e.getMessage(), component, logger);
-        } catch (Exception e) {
-            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", component, logger);
-        }
-        return null;
-    }
     
-    public String updateCaregiver() {
-        try {
-            caregiverBean.update(
-                    currentCaregiver.getUsername(),
-                    currentCaregiver.getPassword(),
-                    currentCaregiver.getName(),
-                    currentCaregiver.getEmail());
-            return "/faces/healthcareProf/healthcareProf_index?faces-redirect=true";
-
-        } catch (EntityDoesNotExistsException | MyConstraintViolationException e) {
-            FacesExceptionHandler.handleException(e, e.getMessage(), logger);
-        } catch (Exception e) {
-            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
-        }
-        return "healthcareProf_caregivers_update";
-    }
-    
-    public void removeCaregiver(ActionEvent event) {
-        try {
-            UIParameter param = (UIParameter) event.getComponent().findComponent("caregiverUsername");
-            String id = param.getValue().toString();
-            caregiverBean.remove(id);
-        } catch (EntityDoesNotExistsException e) {
-            FacesExceptionHandler.handleException(e, e.getMessage(), logger);
-        } catch (Exception e) {
-            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
-        }
-    }
     
     
     public List<Patient> getEnrolledPatients() {
@@ -214,9 +170,63 @@ public class HealtcareProfManager {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
         }
     }
-
+    
+    
+    //PROCEDURES
+    
+    public List<Procedure> proceduresByCaregiver(String username) {
+        try {
+            //String username = userManager.getUsername();
+            return procedureBean.getProceduresByCaregiver(username);
+        } catch (Exception e) {
+            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
+        }
+        return null;
+    }
+    
+    
+    public void removeProcedure(ActionEvent event) {
+        try {
+            UIParameter param = (UIParameter) event.getComponent().findComponent("procedureId");
+            int id  = Integer.parseInt(param.getValue().toString());
+            procedureBean.remove(id);
+        } catch (EntityDoesNotExistsException e) {
+            FacesExceptionHandler.handleException(e, e.getMessage(), logger);
+        } catch (Exception e) {
+            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
+        }
+    }
+    
+    public String createProcedure(String caregiverUsername) {
+        try {
+            procedureBean.create(
+                    newProcedure.getId(),
+                    newProcedure.getPatient().getId(),
+                    caregiverUsername,
+                    currentTrainingMaterial.getId());
+            return "/faces/caregiver/caregiver_index?faces-redirect=true";
+        } catch (EntityAlreadyExistsException | MyConstraintViolationException e) {
+            FacesExceptionHandler.handleException(e, e.getMessage(), component, logger);
+        } catch (Exception e) {
+            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", component, logger);
+        }
+        return null;
+    }
+    
     
     //TRAINING MATERIALS
+    public List<TrainingMaterial> caregiverTrainingMaterials(String username) {
+        try {
+            //String username = userManager.getUsername();
+            return caregiverBean.getCaregiverTrainingMaterials(username);
+        } catch (Exception e) {
+            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
+        }
+        return null;
+    }
+    
+    
+    
     public List<TrainingMaterial> getAllTrainingMaterials() {
         try {
             return trainingMaterialBean.getAll();
@@ -376,6 +386,24 @@ public class HealtcareProfManager {
     public void setComponent(UIComponent component) {
         this.component = component;
     }
+
+    public Procedure getCurrentProcedure() {
+        return currentProcedure;
+    }
+
+    public void setCurrentProcedure(Procedure currentProcedure) {
+        this.currentProcedure = currentProcedure;
+    }
+
+    public Procedure getNewProcedure() {
+        return newProcedure;
+    }
+
+    public void setNewProcedure(Procedure newProcedure) {
+        this.newProcedure = newProcedure;
+    }
+    
+    
 
 
     

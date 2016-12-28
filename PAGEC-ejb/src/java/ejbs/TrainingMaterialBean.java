@@ -16,6 +16,7 @@ import exceptions.EntityAlreadyExistsException;
 import exceptions.EntityDoesNotExistsException;
 import exceptions.MyConstraintViolationException;
 import exceptions.Utils;
+import java.util.LinkedList;
 import java.util.List;
 import javax.ejb.EJBException;
 import javax.ejb.Stateless;
@@ -120,6 +121,28 @@ public class TrainingMaterialBean {
             return needsEnrolled;
         } catch (EntityDoesNotExistsException e) {
             throw e;             
+        } catch (Exception e) {
+            throw new EJBException(e.getMessage());
+        }
+    }
+
+    public List<Need> getTrainingMaterialNotNeeds(int trainingMaterialId) 
+        throws EntityDoesNotExistsException{
+        try {
+            TrainingMaterial trainingMaterial = em.find(TrainingMaterial.class, trainingMaterialId);
+            if (trainingMaterial == null) {
+                throw new EntityDoesNotExistsException("There is no training material with that id.");
+            }   
+            List<Need> needs = (List<Need>) em.createNamedQuery("getAllNeeds").getResultList();
+            List<Need> trainingMaterialNeeds = trainingMaterial.getNeeds();
+            LinkedList<Need> trainingMaterialNotNeeds = new LinkedList<>();
+            for(Need need: trainingMaterialNeeds){
+                    needs.remove(need);
+            }
+
+            return needs;   
+        } catch (EntityDoesNotExistsException e) {
+            throw e;
         } catch (Exception e) {
             throw new EJBException(e.getMessage());
         }

@@ -83,7 +83,7 @@
         <h:dataTable
             var="need"
             summary="Needs"
-            value="#{healtcareProfManager.allNeeds}"
+            value="#{healtcareProfManager.trainingMaterialNotNeeds}"
             rules="all"
             cellpadding="5">
 
@@ -130,7 +130,7 @@
             <h:commandLink
                 id="return"
                 value="Return"
-                action="/faces/healtcareProf/healtcareProf_index?faces-redirect=true" />
+                action="/faces/healthcareProf/healthcareProf_index?faces-redirect=true" />
         </h:form>
 
         <h:messages errorStyle="color: red" />        

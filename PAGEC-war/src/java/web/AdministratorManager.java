@@ -306,9 +306,11 @@ public class AdministratorManager {
         return null;
     }
 
-    public List<Need> getAllNeeds() {
+    public List<Need> getTrainingMaterialNotNeeds() {
         try {
-            return needBean.getAll();
+            return trainingMaterialBean.getTrainingMaterialNotNeeds(currentTrainingMaterial.getId());
+        } catch (EntityDoesNotExistsException e) {
+            FacesExceptionHandler.handleException(e, e.getMessage(), logger);
         } catch (Exception e) {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
         }
@@ -420,6 +422,7 @@ public class AdministratorManager {
     public TRMAT[] getTRMATs() {
         return TRMAT.values();
     }
+
     
     
     ///////////// VALIDATORS ////////////////////////
