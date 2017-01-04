@@ -1,6 +1,9 @@
 package ejbs;
 
+import dtos.CaregiverDTO;
+import dtos.NeedDTO;
 import dtos.PatientDTO;
+import entities.Caregiver;
 import entities.Need;
 import entities.Patient;
 import entities.Procedure;
@@ -13,6 +16,8 @@ import exceptions.Utils;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import javax.annotation.security.DeclareRoles;
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJBException;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -20,11 +25,13 @@ import javax.persistence.PersistenceContext;
 import javax.validation.ConstraintViolationException;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 @Stateless
 @Path("/patients")
+@DeclareRoles({"Administrator", "Caregiver"})
 public class PatientBean {
 
     @PersistenceContext
@@ -51,6 +58,7 @@ public class PatientBean {
     @GET
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Path("all")
+    //@RolesAllowed("Caregiver")
     public List<PatientDTO> getAll() {
         try {
             List<Patient> patients = (List<Patient>) em.createNamedQuery("getAllPatients").getResultList();
@@ -135,32 +143,17 @@ public class PatientBean {
         }
     }
     
-    
-    List<PatientDTO> patientsToDTOs(List<Patient> patients) {
-        
-        List<PatientDTO> dtos = new ArrayList<>();
-        System.err.println("Ola");
-        System.out.println("ejbs.PatientBean.patientsToDTOs()");
-        for(Patient patient : patients) {
-            if(patient.getCaregiver() == null){
-                dtos.add(new PatientDTO(patient.getId(), patient.getName(), "The patient does not have caregiver", "The patient does not have caregiver"));
-            } else {
-                dtos.add(new PatientDTO(patient.getId(), patient.getName(), patient.getCaregiver().getUsername(), patient.getCaregiver().getName()));
-            }
-            
-        }
-        
-        return dtos;
-    }
-    
-    public List<Need> getNeeds(int patientId) throws EntityDoesNotExistsException{
+    @GET
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Path("patientNeeds/{patientId}")
+    public List<NeedDTO> getNeeds(@PathParam("patientId") int patientId) throws EntityDoesNotExistsException{
         try {
             Patient patient = em.find(Patient.class, patientId);
             if (patient == null) {
                 throw new EntityDoesNotExistsException("There is no patient with that id.");
             }           
             List<Need> needs = (List<Need>) patient.getNeeds();
-            return needs;
+            return needsToDTOs(needs);
         } catch (EntityDoesNotExistsException e) {
             throw e;             
         } catch (Exception e) {
@@ -168,7 +161,7 @@ public class PatientBean {
         }
     }
     
-    public List<Need> getUnrolledNeeds(int patientId) 
+    public List<NeedDTO> getUnrolledNeeds(int patientId) 
             throws EntityDoesNotExistsException{
         try {
             List<Need> needs = (List<Need>) em.createNamedQuery("getAllNeeds").getResultList();
@@ -183,12 +176,42 @@ public class PatientBean {
                     result.add(need);
                 }
             }
-
-            return result; 
+            return needsToDTOs(result); 
         } catch (EntityDoesNotExistsException e) {
             throw e;  
         } catch (Exception e) {
             throw new EJBException(e.getMessage());
         }
+    }
+    
+    PatientDTO patientToDTO(Patient patient) {
+        if(patient.getCaregiver() != null){
+            return new PatientDTO(patient.getId(), patient.getName(), patient.getCaregiver().getUsername());
+        } else {
+            return new PatientDTO(patient.getId(), patient.getName(), null); 
+        }
+        
+    }
+    
+    
+    List<PatientDTO> patientsToDTOs(List<Patient> patients) {
+        List<PatientDTO> dtos = new ArrayList<>();
+        for (Patient patient : patients) {
+            dtos.add(patientToDTO(patient));            
+        }
+        return dtos;
+    }
+    
+    NeedDTO needToDTO(Need need) {
+        return new NeedDTO(need.getId(), need.getName());
+    }
+    
+    
+    List<NeedDTO> needsToDTOs(List<Need> needs) {
+        List<NeedDTO> dtos = new ArrayList<>();
+        for (Need need : needs) {
+            dtos.add(needToDTO(need));            
+        }
+        return dtos;
     }
 }

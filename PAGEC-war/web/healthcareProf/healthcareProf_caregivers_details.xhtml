@@ -165,7 +165,7 @@
         <br/>
 
         <h:dataTable
-            var="patient"
+            var="patientUnrolled"
             summary="Unrolled patients"
             value="#{healtcareProfManager.unrolledPatients}"
             rules="all"
@@ -179,7 +179,7 @@
                 <f:facet name="header">
                     <h:outputText value="ID" />
                 </f:facet>
-                <h:outputText value="#{patient.id}" />
+                <h:outputText value="#{patientUnrolled.id}" />
                 <!--Falta validar o formato-->
             </h:column>
 
@@ -187,7 +187,7 @@
                 <f:facet name="header">
                     <h:outputText value="Name" />
                 </f:facet>
-                <h:outputText value="#{patient.name}" />
+                <h:outputText value="#{patientUnrolled.name}" />
             </h:column>
                       
 
@@ -197,7 +197,7 @@
                 </f:facet>
                 <h:form>
                     <h:commandLink value="Enroll" actionListener="#{healtcareProfManager.enrollPatient}">
-                        <f:param name="patientId" id="patientId" value="#{patient.id}" />
+                        <f:param name="patientId" id="patientId" value="#{patientUnrolled.id}" />
                     </h:commandLink>
                 </h:form>
             </h:column>

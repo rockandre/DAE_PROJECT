@@ -74,6 +74,12 @@ public class Caregiver extends User implements Serializable {
         patients.remove(patient);
     }
     
-    
+    public void addProcedure(Procedure procedure) {
+        procedures.add(procedure);
+    }
+
+    public void removeProcedure(Procedure procedure) {
+        procedures.remove(procedure);
+    }
     
 }

@@ -1,11 +1,14 @@
 package ejbs;
 
+import dtos.AdministratorDTO;
 import entities.Administrator;
 import entities.HealthcareProf;
+import entities.User;
 import exceptions.EntityAlreadyExistsException;
 import exceptions.EntityDoesNotExistsException;
 import exceptions.MyConstraintViolationException;
 import exceptions.Utils;
+import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.EJBException;
 import javax.ejb.Stateless;
@@ -22,8 +25,8 @@ public class AdministratorBean {
     public void create(String username, String password, String name, String email) 
             throws EntityAlreadyExistsException, MyConstraintViolationException{
         try {
-            if(em.find(Administrator.class, username) != null){
-                throw new EntityAlreadyExistsException("A administrator with that username already exists.");
+            if(em.find(User.class, username) != null){
+                throw new EntityAlreadyExistsException("A user with that username already exists.");
             }
             em.persist(new Administrator(username, password, name, email));
         } catch (EntityAlreadyExistsException e) {
@@ -35,10 +38,10 @@ public class AdministratorBean {
         }
     }
 
-    public List<Administrator> getAll() {
+    public List<AdministratorDTO> getAll() {
         try {
             List<Administrator> administrators = (List<Administrator>) em.createNamedQuery("getAllAdministrators").getResultList();
-            return administrators;
+            return administratorsToDTOs(administrators);
         } catch (Exception e) {
             throw new EJBException(e.getMessage());
         }
@@ -52,7 +55,7 @@ public class AdministratorBean {
                 throw new EntityDoesNotExistsException("There is no administrator with that username.");
             }
             
-            administrator.setPassword(password);
+            administrator.setCleanPassword(password);
             administrator.setName(name);
             administrator.setEmail(email);
             em.merge(administrator);
@@ -81,5 +84,13 @@ public class AdministratorBean {
         } catch (Exception e) {
             throw new EJBException(e.getMessage());
         }
+    }
+    
+    List<AdministratorDTO> administratorsToDTOs(List<Administrator> administrators) {
+        List<AdministratorDTO> dtos = new ArrayList<>();
+        for (Administrator a : administrators) {
+            dtos.add(new AdministratorDTO(a.getUsername(), a.getPassword(), a.getName(), a.getEmail()));            
+        }
+        return dtos;
     }
 }

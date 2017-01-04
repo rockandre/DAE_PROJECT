@@ -1,13 +1,17 @@
 package ejbs;
 
+import dtos.AdministratorDTO;
+import dtos.HealthcareProfDTO;
 import dtos.PatientDTO;
 import entities.Administrator;
 import entities.HealthcareProf;
 import entities.Patient;
+import entities.User;
 import exceptions.EntityAlreadyExistsException;
 import exceptions.EntityDoesNotExistsException;
 import exceptions.MyConstraintViolationException;
 import exceptions.Utils;
+import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.EJBException;
 import javax.ejb.Stateless;
@@ -28,8 +32,8 @@ public class HealthcareProfBean {
     public void create(String username, String password, String name, String email) 
             throws EntityAlreadyExistsException, MyConstraintViolationException{
         try {
-            if(em.find(HealthcareProf.class, username) != null){
-                throw new EntityAlreadyExistsException("A HealthcareProfissional with that username already exists.");
+            if(em.find(User.class, username) != null){
+                throw new EntityAlreadyExistsException("A user with that username already exists.");
             }
             em.persist(new HealthcareProf(username, password, name, email));
         } catch (EntityAlreadyExistsException e) {
@@ -42,10 +46,10 @@ public class HealthcareProfBean {
     }
 
 
-    public List<HealthcareProf> getAll() {
+    public List<HealthcareProfDTO> getAll() {
         try {
             List<HealthcareProf> healthcareProfs = (List<HealthcareProf>) em.createNamedQuery("getAllHealthcareProfs").getResultList();
-            return healthcareProfs;
+            return healthcareProfsToDTOs(healthcareProfs);
         } catch (Exception e) {
             throw new EJBException(e.getMessage());
         }
@@ -59,7 +63,7 @@ public class HealthcareProfBean {
                 throw new EntityDoesNotExistsException("There is no HealthcareProf with that username.");
             }
             
-            healthcareProf.setPassword(password);
+            healthcareProf.setCleanPassword(password);
             healthcareProf.setName(name);
             healthcareProf.setEmail(email);
             em.merge(healthcareProf);
@@ -88,5 +92,13 @@ public class HealthcareProfBean {
         } catch (Exception e) {
             throw new EJBException(e.getMessage());
         }
+    }
+    
+    List<HealthcareProfDTO> healthcareProfsToDTOs(List<HealthcareProf> healthcareProfs) {
+        List<HealthcareProfDTO> dtos = new ArrayList<>();
+        for (HealthcareProf h : healthcareProfs) {
+            dtos.add(new HealthcareProfDTO(h.getUsername(), h.getPassword(), h.getName(), h.getEmail()));            
+        }
+        return dtos;
     }
 }

@@ -38,7 +38,7 @@
         <h3> New procedure:</h3>
         <h:form>    
             
-            <h:panelGrid columns="3">
+            <h:panelGrid columns="2">
 
                 <h:outputLabel for="id" value="ID: " />
                 <h:inputText 
@@ -51,22 +51,13 @@
                 <h:message for="username" errorStyle="color: red" />
 
                 <!-- LISTA DOS SEUS PACIENTES -->
-                <h:outputLabel for="tipoTM" value="Tipo: " />
-                <h:selectOneMenu value="#{caregiverManager.newTrainingMaterial.tipoTM}" >
-                    <f:selectItems value="#{caregiverManager.TRMATs}" />
+                <h:outputLabel for="patient" value="Paciente: " />
+                <h:selectOneMenu value="#{caregiverManager.patientId}" >
+                    <f:selectItems value="#{caregiverManager.getEnrolledPatientsByUsername(userManager.username)}" var="patient"
+                                   itemLabel="#{patient.name}" itemValue="#{patient.id}" />
                 </h:selectOneMenu>
-                <h:message for="tipoTM" errorStyle="color: red" />
+                <h:message for="patient" errorStyle="color: red" />
                 
-                <h:outputLabel for="link" value="Link: " />
-                <h:inputText
-                    id="link"
-                    size="52"
-                    required="true"
-                    requiredMessage="Error: Link cannot be empty."                            
-                    value="#{caregiverManager.newTrainingMaterial.link}" >
-                </h:inputText>    
-                <h:message for="link" errorStyle="color: red" />
-
 
                 <br></br>
 
@@ -76,8 +67,8 @@
                 <h:commandButton
                     id="submit"
                     value="Create"
-                    binding="#{administratorManager.component}" 
-                    action="#{administratorManager.createTrainingMaterial}" />
+                    binding="#{caregiverManager.component}" 
+                    action="#{caregiverManager.createProcedure(userManager.username)}" />
                 <h:message for="submit" style="color: red"/>
             </h:panelGrid >                       
 

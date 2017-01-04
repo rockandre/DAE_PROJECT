@@ -1,6 +1,9 @@
 package ejbs;
 
+import dtos.NeedDTO;
+import dtos.PatientDTO;
 import entities.Need;
+import entities.Patient;
 import entities.TrainingMaterial;
 import exceptions.EntityAlreadyExistsException;
 import exceptions.EntityDoesNotExistsException;
@@ -8,6 +11,7 @@ import exceptions.EntityEnrolledException;
 import exceptions.EntityNotEnrolledException;
 import exceptions.MyConstraintViolationException;
 import exceptions.Utils;
+import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.EJBException;
 import javax.ejb.Stateless;
@@ -45,10 +49,10 @@ public class NeedBean {
     
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Path("all")
-    public List<Need> getAll() {
+    public List<NeedDTO> getAll() {
         try {
             List<Need> needs = (List<Need>) em.createNamedQuery("getAllNeeds").getResultList();
-            return needs;
+            return needsToDTOs(needs);
         } catch (Exception e) {
             throw new EJBException(e.getMessage());
         }
@@ -65,6 +69,9 @@ public class NeedBean {
             for(TrainingMaterial trainingMaterial: need.getTrainingMaterials()){
                 trainingMaterial.removeNeed(need);
             }
+            
+            
+            
             
             em.remove(need);
 
@@ -131,6 +138,19 @@ public class NeedBean {
         } catch (Exception e) {
             throw new EJBException(e.getMessage());
         }
+    }
+    
+    NeedDTO needToDTO(Need need) {
+        return new NeedDTO(need.getId(), need.getName());
+    }
+    
+    
+    List<NeedDTO> needsToDTOs(List<Need> needs) {
+        List<NeedDTO> dtos = new ArrayList<>();
+        for (Need need : needs) {
+            dtos.add(needToDTO(need));            
+        }
+        return dtos;
     }
     
 }

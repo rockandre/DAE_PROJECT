@@ -130,6 +130,14 @@ public class TrainingMaterial implements Serializable {
         needs.remove(need);
     }
     
+    public void addProcedure(Procedure procedure) {
+        procedures.add(procedure);
+    }
+
+    public void removeProcedure(Procedure procedure) {
+        procedures.remove(procedure);
+    }
+    
     
     
 }

@@ -5,27 +5,31 @@
  */
 package dtos;
 
+import enumerations.TRMAT;
 import java.io.Serializable;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
  * @author joaop
  */
+@XmlRootElement(name = "TrainingMaterial")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class TrainingMaterialDTO implements Serializable{
     int id;
     String name;
-    String tipoSuporte;
-    String tipoTrainingMaterial;
+    TRMAT tipoTM;
     String link;
 
     public TrainingMaterialDTO() {
     }
 
-    public TrainingMaterialDTO(int id, String name, String tipoSuporte, String tipoTrainingMaterial, String link) {
+    public TrainingMaterialDTO(int id, String name, TRMAT tipoTrainingMaterial, String link) {
         this.id = id;
         this.name = name;
-        this.tipoSuporte = tipoSuporte;
-        this.tipoTrainingMaterial = tipoTrainingMaterial;
+        this.tipoTM = tipoTrainingMaterial;
         this.link = link;
     }
 
@@ -42,8 +46,7 @@ public class TrainingMaterialDTO implements Serializable{
     public void reset(){
         setId(0);
         setName(null);
-        setTipoSuporte(null);
-        setTipoTrainingMaterial(null);
+        setTipoTM(null);
         setLink(null);
     }
     
@@ -63,20 +66,13 @@ public class TrainingMaterialDTO implements Serializable{
         this.name = name;
     }
 
-    public String getTipoSuporte() {
-        return tipoSuporte;
+
+    public TRMAT getTipoTM() {
+        return tipoTM;
     }
 
-    public void setTipoSuporte(String tipoSuporte) {
-        this.tipoSuporte = tipoSuporte;
-    }
-
-    public String getTipoTrainingMaterial() {
-        return tipoTrainingMaterial;
-    }
-
-    public void setTipoTrainingMaterial(String tipoTrainingMaterial) {
-        this.tipoTrainingMaterial = tipoTrainingMaterial;
+    public void setTipoTM(TRMAT tipoTrainingMaterial) {
+        this.tipoTM = tipoTrainingMaterial;
     }
     
     

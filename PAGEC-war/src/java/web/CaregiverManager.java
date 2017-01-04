@@ -1,212 +1,138 @@
 package web;
 
+import dtos.CaregiverDTO;
+import dtos.NeedDTO;
 import dtos.PatientDTO;
-import ejbs.AdministratorBean;
-import ejbs.CaregiverBean;
-import ejbs.HealthcareProfBean;
-import ejbs.NeedBean;
-import ejbs.PatientBean;
-import ejbs.ProcedureBean;
-import ejbs.TrainingMaterialBean;
-import entities.Administrator;
-import entities.Caregiver;
-import entities.HealthcareProf;
-import entities.Need;
-import entities.Patient;
-import entities.Procedure;
-import entities.TrainingMaterial;
+import dtos.ProcedureDTO;
+import dtos.TrainingMaterialDTO;
 import enumerations.TRMAT;
-import exceptions.EntityAlreadyExistsException;
-import exceptions.EntityDoesNotExistsException;
-import exceptions.EntityEnrolledException;
-import exceptions.MyConstraintViolationException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
-import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIInput;
-import javax.faces.component.UIParameter;
 import javax.faces.context.FacesContext;
-import javax.faces.event.ActionEvent;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
 
 @ManagedBean
 @SessionScoped
 public class CaregiverManager {
 
-    @EJB
-    private CaregiverBean caregiverBean;
-    @EJB
-    private TrainingMaterialBean trainingMaterialBean;
-    @EJB
-    private NeedBean needBean;
-    @EJB
-    private ProcedureBean procedureBean;
-    
-    @EJB
-    private PatientBean patientBean;
     private static final Logger logger = Logger.getLogger("web.CaregiverManager");
-    private Caregiver currentCaregiver;
-    private Caregiver newCaregiver;
-    private Procedure currentProcedure;
-    private Procedure newProcedure;
-    private TrainingMaterial currentTrainingMaterial;
-    private TrainingMaterial newTrainingMaterial;
+    private CaregiverDTO currentCaregiver;
+    private CaregiverDTO newCaregiver;
+    private ProcedureDTO currentProcedure;
+    private ProcedureDTO newProcedure;
+    private TrainingMaterialDTO currentTrainingMaterial;
+    private TrainingMaterialDTO newTrainingMaterial;
+    private int patientId;
+    @ManagedProperty("#{userManager}")
+    private UserManager userManager;
     private UIComponent component;
     private Client client;
-    private final String baseUri = "http://localhost:8080/AcademicManagement_FICHA6-war/webapi";
+    private final String baseUri = "http://localhost:8080/PAGEC-war/webapi";
     public CaregiverManager() {
-        newCaregiver= new Caregiver();
-        newTrainingMaterial = new TrainingMaterial();
-        newProcedure = new Procedure();
+        newCaregiver= new CaregiverDTO();
+        newTrainingMaterial = new TrainingMaterialDTO();
+        newProcedure = new ProcedureDTO();
         client = ClientBuilder.newClient();
     }
 
     
     
     
-    
-    
-    
-    public List<Patient> getEnrolledPatients() {
+    public List<PatientDTO> getEnrolledPatientsByUsername(String username) {
         try {
-            return caregiverBean.getEnrolledPatients(currentCaregiver.getUsername());
-        } catch (EntityDoesNotExistsException e) {
-            FacesExceptionHandler.handleException(e, e.getMessage(), logger);
+            client.register(new Authenticator(userManager.getUsername(), userManager.getPassword()));
+            List<PatientDTO> patients = new ArrayList<>();
+            patients = client.target(baseUri)
+                    .path("/caregivers/enrolledPatients/" + username)
+                    //.queryParam("username", username)
+                    .request(MediaType.APPLICATION_XML)
+                    .get(new GenericType<List<PatientDTO>>() {
+                    });
+            
+            return patients; //caregiverBean.getEnrolledPatients(username);
+        /*} catch (EntityDoesNotExistsException e) {
+            FacesExceptionHandler.handleException(e, e.getMessage(), logger);*/
         } catch (Exception e) {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
         }
         return null;
     }
-
-    public List<Patient> getUnrolledPatients() {
-        try {
-            return caregiverBean.getUnrolledPatients();
-        } catch (Exception e) {
-            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
-        }
-        return null;
-    }
-
-    public void enrollPatient(ActionEvent event) {
-        try {
-            UIParameter param = (UIParameter) event.getComponent().findComponent("patientId");
-            int id  = Integer.parseInt(param.getValue().toString());
-            caregiverBean.enrollPatient(currentCaregiver.getUsername(), id);
-        } catch (EntityDoesNotExistsException e) {
-            FacesExceptionHandler.handleException(e, e.getMessage(), logger);
-        } catch (Exception e) {
-            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
-        }
-    }
-
-    public void unrollPatient(ActionEvent event) {
-        try {
-            UIParameter param = (UIParameter) event.getComponent().findComponent("patientId");
-            int id  = Integer.parseInt(param.getValue().toString());
-            caregiverBean.unrollPatient(currentCaregiver.getUsername(), id);
-        } catch (EntityDoesNotExistsException e) {
-            FacesExceptionHandler.handleException(e, e.getMessage(), logger);
-        } catch (Exception e) {
-            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
-        }
-    }
+    
                                 //NEEDS
     
-    public List<Need> getPatientNeeds(int id) {
+    public List<NeedDTO> getPatientNeeds(int id) {
         try {
-            return patientBean.getNeeds(id);
-        } catch (EntityDoesNotExistsException e) {
-            FacesExceptionHandler.handleException(e, e.getMessage(), logger);
+            client.register(new Authenticator(userManager.getUsername(), userManager.getPassword()));
+            List<NeedDTO> needs = new ArrayList<>();
+            needs = client.target(baseUri)
+                    .path("/patients/patientNeeds/" + id)
+                    //.queryParam("username", username)
+                    .request(MediaType.APPLICATION_XML)
+                    .get(new GenericType<List<NeedDTO>>() {
+                    });
+            
+            return needs;//patientBean.getNeeds(id);
+        /*} catch (EntityDoesNotExistsException e) {
+            FacesExceptionHandler.handleException(e, e.getMessage(), logger);*/
         } catch (Exception e) {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
         }
         return null;
-    }
-    
-    public List<Need> getPatientNotNeeds(int id) {
-        try {
-            return patientBean.getUnrolledNeeds(id);
-        } catch (EntityDoesNotExistsException e) {
-            FacesExceptionHandler.handleException(e, e.getMessage(), logger);
-        } catch (Exception e) {
-            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
-        }
-        return null;
-    }
-    
-    public void unrollPatientNeed(ActionEvent event) {
-        try {
-            UIParameter param = (UIParameter) event.getComponent().findComponent("needId");
-            int needId  = Integer.parseInt(param.getValue().toString());
-            UIParameter param2 = (UIParameter) event.getComponent().findComponent("patientId");
-            int patientId  = Integer.parseInt(param2.getValue().toString());
-            patientBean.unrollNeed(patientId, needId);
-        } catch (EntityDoesNotExistsException e) {
-            FacesExceptionHandler.handleException(e, e.getMessage(), logger);
-        } catch (Exception e) {
-            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
-        }
-    }
-    
-    public void enrollPatientNeed(ActionEvent event) {
-        try {
-            UIParameter param = (UIParameter) event.getComponent().findComponent("needId");
-            int needId  = Integer.parseInt(param.getValue().toString());
-            UIParameter param2 = (UIParameter) event.getComponent().findComponent("patientId");
-            int patientId  = Integer.parseInt(param2.getValue().toString());
-            patientBean.enrollNeed(patientId, needId);
-        } catch (EntityDoesNotExistsException | EntityEnrolledException e) {
-            FacesExceptionHandler.handleException(e, e.getMessage(), logger);
-        } catch (Exception e) {
-            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
-        }
     }
     
     
     //PROCEDURES
     
-    public List<Procedure> proceduresByCaregiver(String username) {
+    public List<ProcedureDTO> proceduresByCaregiver(String username) {
         try {
+            client.register(new Authenticator(userManager.getUsername(), userManager.getPassword()));
+            List<ProcedureDTO> procedures = new ArrayList<>();
+            procedures = client.target(baseUri)
+                    .path("/procedures/proceduresByCaregiver/" + username)
+                    //.queryParam("username", username)
+                    .request(MediaType.APPLICATION_XML)
+                    .get(new GenericType<List<ProcedureDTO>>() {
+                    });
             //String username = userManager.getUsername();
-            return procedureBean.getProceduresByCaregiver(username);
+            return procedures;//procedureBean.getProceduresByCaregiver(username);
         } catch (Exception e) {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
         }
         return null;
     }
     
-    
-    public void removeProcedure(ActionEvent event) {
-        try {
-            UIParameter param = (UIParameter) event.getComponent().findComponent("procedureId");
-            int id  = Integer.parseInt(param.getValue().toString());
-            procedureBean.remove(id);
-        } catch (EntityDoesNotExistsException e) {
-            FacesExceptionHandler.handleException(e, e.getMessage(), logger);
-        } catch (Exception e) {
-            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
-        }
-    }
-    
     public String createProcedure(String caregiverUsername) {
         try {
+            
+            ProcedureDTO procedureDTO = new ProcedureDTO(newProcedure.getId(), new Date(), patientId, "", caregiverUsername, "", currentTrainingMaterial.getId(), "");
+            client.register(new Authenticator(userManager.getUsername(), userManager.getPassword()));
+            WebTarget target = client.target(baseUri);
+            target = target.path("/procedures/create/");
+            Response response = target.request().put(Entity.xml(procedureDTO));
+            /*
             procedureBean.create(
                     newProcedure.getId(),
-                    newProcedure.getPatient().getId(),
+                    patientId,
                     caregiverUsername,
-                    currentTrainingMaterial.getId());
+                    currentTrainingMaterial.getId());*/
             return "/faces/caregiver/caregiver_index?faces-redirect=true";
-        } catch (EntityAlreadyExistsException | MyConstraintViolationException e) {
-            FacesExceptionHandler.handleException(e, e.getMessage(), component, logger);
+        /*} catch (EntityAlreadyExistsException | MyConstraintViolationException | EntityNotEnrolledException | EntityDoesNotExistsException e) {
+            FacesExceptionHandler.handleException(e, e.getMessage(), component, logger);*/
         } catch (Exception e) {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", component, logger);
         }
@@ -215,10 +141,17 @@ public class CaregiverManager {
     
     
     //TRAINING MATERIALS
-    public List<TrainingMaterial> caregiverTrainingMaterials(String username) {
+    public List<TrainingMaterialDTO> caregiverTrainingMaterials(String username) {
         try {
-            //String username = userManager.getUsername();
-            return caregiverBean.getCaregiverTrainingMaterials(username);
+            client.register(new Authenticator(userManager.getUsername(), userManager.getPassword()));
+            List<TrainingMaterialDTO> trainingMaterials = new ArrayList<>();
+            trainingMaterials = client.target(baseUri)
+                    .path("/caregivers/caregiverTrainingMaterials/" + username)
+                    //.queryParam("username", username)
+                    .request(MediaType.APPLICATION_XML)
+                    .get(new GenericType<List<TrainingMaterialDTO>>() {
+                    });
+            return trainingMaterials;//caregiverBean.getCaregiverTrainingMaterials(username);
         } catch (Exception e) {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
         }
@@ -227,150 +160,40 @@ public class CaregiverManager {
     
     
     
-    public List<TrainingMaterial> getAllTrainingMaterials() {
-        try {
-            return trainingMaterialBean.getAll();
-        } catch (Exception e) {
-            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
-        }
-        return null;
-    }
-    
-    public String createTrainingMaterial() {
-        try {
-            trainingMaterialBean.create(
-                    newTrainingMaterial.getId(),
-                    newTrainingMaterial.getName(),
-                    newTrainingMaterial.getTipoTM(),
-                    newTrainingMaterial.getLink());
-            return "/faces/healthcareProf/healthcareProf_index?faces-redirect=true";
-        } catch (EntityAlreadyExistsException | MyConstraintViolationException e) {
-            FacesExceptionHandler.handleException(e, e.getMessage(), component, logger);
-        } catch (Exception e) {
-            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", component, logger);
-        }
-        return null;
-    }
-    
-    public String updateTrainingMaterial() {
-        try {
-            trainingMaterialBean.update(
-                    currentTrainingMaterial.getId(),
-                    currentTrainingMaterial.getName(),
-                    currentTrainingMaterial.getTipoTM(),
-                    currentTrainingMaterial.getLink());
-            return "/faces/healthcareProf/healthcareProf_index?faces-redirect=true";
-
-        } catch (EntityDoesNotExistsException | MyConstraintViolationException e) {
-            FacesExceptionHandler.handleException(e, e.getMessage(), logger);
-        } catch (Exception e) {
-            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
-        }
-        return "healthcareProf_trainingmaterials_update";
-    }
-    
-    public void removeTrainingMaterial(ActionEvent event) {
-        try {
-            UIParameter param = (UIParameter) event.getComponent().findComponent("trainingMaterialId");
-            int id  = Integer.parseInt(param.getValue().toString());
-            trainingMaterialBean.remove(id);
-        } catch (EntityDoesNotExistsException e) {
-            FacesExceptionHandler.handleException(e, e.getMessage(), logger);
-        } catch (Exception e) {
-            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
-        }
-    }
-    
-                            //NEEDS
-    
-    public List<Need> getEnrolledNeeds() {
-        try {
-            return trainingMaterialBean.getEnrolledNeeds(currentTrainingMaterial.getId());
-        } catch (EntityDoesNotExistsException e) {
-            FacesExceptionHandler.handleException(e, e.getMessage(), logger);
-        } catch (Exception e) {
-            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
-        }
-        return null;
-    }
-
-    public List<Need> getAllNeeds() {
-        try {
-            return needBean.getAll();
-        } catch (Exception e) {
-            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
-        }
-        return null;
-    }
-    
-    public List<Need> getTrainingMaterialNotNeeds() {
-        try {
-            return trainingMaterialBean.getTrainingMaterialNotNeeds(currentTrainingMaterial.getId());
-        } catch (EntityDoesNotExistsException e) {
-            FacesExceptionHandler.handleException(e, e.getMessage(), logger);
-        } catch (Exception e) {
-            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
-        }
-        return null;
-    }
-
-    public void enrollNeed(ActionEvent event) {
-        try {
-            UIParameter param = (UIParameter) event.getComponent().findComponent("needId");
-            int id  = Integer.parseInt(param.getValue().toString());
-            needBean.enrollTrainingMaterial(id, currentTrainingMaterial.getId());
-        } catch (EntityDoesNotExistsException | EntityEnrolledException e) {
-            FacesExceptionHandler.handleException(e, e.getMessage(), logger);
-        } catch (Exception e) {
-            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
-        }
-    }
-
-    public void unrollNeed(ActionEvent event) {
-        try {
-            UIParameter param = (UIParameter) event.getComponent().findComponent("needId");
-            int id  = Integer.parseInt(param.getValue().toString());
-            needBean.unrollTrainingMaterial(id, currentTrainingMaterial.getId());
-        } catch (EntityDoesNotExistsException e) {
-            FacesExceptionHandler.handleException(e, e.getMessage(), logger);
-        } catch (Exception e) {
-            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
-        }
-    }
     
     
     // GETTERS E SETTERS
 
 
-    public Caregiver getCurrentCaregiver() {
+    public CaregiverDTO getCurrentCaregiver() {
         return currentCaregiver;
     }
 
-    public void setCurrentCaregiver(Caregiver currentCaregiver) {
+    public void setCurrentCaregiver(CaregiverDTO currentCaregiver) {
         this.currentCaregiver = currentCaregiver;
     }
 
-    public Caregiver getNewCaregiver() {
+    public CaregiverDTO getNewCaregiver() {
         return newCaregiver;
     }
 
-    public void setNewCaregiver(Caregiver newCaregiver) {
+    public void setNewCaregiver(CaregiverDTO newCaregiver) {
         this.newCaregiver = newCaregiver;
     }
 
-    public TrainingMaterial getCurrentTrainingMaterial() {
+    public TrainingMaterialDTO getCurrentTrainingMaterial() {
         return currentTrainingMaterial;
     }
 
-    public void setCurrentTrainingMaterial(TrainingMaterial currentTrainingMaterial) {
+    public void setCurrentTrainingMaterial(TrainingMaterialDTO currentTrainingMaterial) {
         this.currentTrainingMaterial = currentTrainingMaterial;
     }
 
-    public TrainingMaterial getNewTrainingMaterial() {
+    public TrainingMaterialDTO getNewTrainingMaterial() {
         return newTrainingMaterial;
     }
 
-    public void setNewTrainingMaterial(TrainingMaterial newTrainingMaterial) {
+    public void setNewTrainingMaterial(TrainingMaterialDTO newTrainingMaterial) {
         this.newTrainingMaterial = newTrainingMaterial;
     }
     
@@ -387,21 +210,34 @@ public class CaregiverManager {
         this.component = component;
     }
 
-    public Procedure getCurrentProcedure() {
+    public ProcedureDTO getCurrentProcedure() {
         return currentProcedure;
     }
 
-    public void setCurrentProcedure(Procedure currentProcedure) {
+    public void setCurrentProcedure(ProcedureDTO currentProcedure) {
         this.currentProcedure = currentProcedure;
     }
 
-    public Procedure getNewProcedure() {
+    public ProcedureDTO getNewProcedure() {
         return newProcedure;
     }
 
-    public void setNewProcedure(Procedure newProcedure) {
+    public void setNewProcedure(ProcedureDTO newProcedure) {
         this.newProcedure = newProcedure;
     }
+
+   public int getPatientId() {
+        return patientId;
+    }
+
+    public void setPatientId(int patientId) {
+        this.patientId = patientId;
+    }
+
+    public void setUserManager(UserManager userManager) {
+        this.userManager = userManager;
+    }
+
     
     
 

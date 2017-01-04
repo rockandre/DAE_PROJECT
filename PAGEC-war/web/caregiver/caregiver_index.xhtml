@@ -8,12 +8,78 @@
     </h:head>
     <h:body>
 
-        <h1> Hi, I'm a caregiver! </h1>
+        <h2> You are logged as caregiver!</h2>
         
         <br/>
+         <h:dataTable
+            var="patient"
+            summary="Enrolled patients"
+            value="#{caregiverManager.getEnrolledPatientsByUsername(userManager.username)}"
+            rules="all"
+            cellpadding="6">
+
+            <f:facet name="header">
+                <h:outputText value="Enrolled patients" />
+            </f:facet>
+
+            <h:column>
+                <f:facet name="header">
+                    <h:outputText value="ID" />
+                </f:facet>
+                <h:outputText value="#{patient.id}" />
+                <!--Falta validar o formato-->
+            </h:column>
+
+            <h:column>
+                <f:facet name="header">
+                    <h:outputText value="Name" />
+                </f:facet>
+                <h:outputText value="#{patient.name}" />
+            </h:column>   
+            
+            <h:column>
+                <f:facet name="header">
+                    <h:outputText value="Needs" />
+                </f:facet>
+                <h:dataTable
+            var="need"
+            summary="Patient Needs"
+            value="#{caregiverManager.getPatientNeeds(patient.id)}"
+            rules="all"
+            cellpadding="5">
+            <h:column>
+                <f:facet name="header">
+                    <h:outputText value="ID" />
+                </f:facet>
+                <h:outputText value="#{need.id}" />
+                <!--Falta validar o formato-->
+            </h:column>
+
+            <h:column>
+                <f:facet name="header">
+                    <h:outputText value="Name" />
+                </f:facet>
+                <h:outputText value="#{need.name}" />
+            </h:column>
+                      
+
+              
+                <br/>
+                    <!-- aaaaaa -->
+        </h:dataTable> 
+                <br/>
+              
+                
+            </h:column>  
+
+
+        </h:dataTable>            
         
+        <br/>
+        <br/>
+        <br/>
         <h:dataTable
-            var="trainingMaterial"
+            var="trainingMaterialDTO"
             summary="List of Training Materials"
             value="#{caregiverManager.caregiverTrainingMaterials(userManager.username)}"
             rules="all"
@@ -27,7 +93,7 @@
                 <f:facet name="header">
                     <h:outputText value="Id" />
                 </f:facet>
-                <h:outputText value="#{trainingMaterial.id}" />
+                <h:outputText value="#{trainingMaterialDTO.id}" />
                 <!--Falta validar o formato-->
             </h:column>
 
@@ -35,21 +101,21 @@
                 <f:facet name="header">
                     <h:outputText value="Name" />
                 </f:facet>
-                <h:outputText value="#{trainingMaterial.name}" />
+                <h:outputText value="#{trainingMaterialDTO.name}" />
             </h:column>
 
             <h:column>
                 <f:facet name="header">
                     <h:outputText value="Type" />
                 </f:facet>
-                <h:outputText value="#{trainingMaterial.tipoTM}" />
+                <h:outputText value="#{trainingMaterialDTO.tipoTM}" />
             </h:column>   
             
             <h:column>
                 <f:facet name="header">
                     <h:outputText value="Link" />
                 </f:facet>
-                <h:outputText value="#{trainingMaterial.link}" />
+                <h:outputText value="#{trainingMaterialDTO.link}" />
             </h:column>  
             <h:column>
                 <f:facet name="header">
@@ -57,7 +123,7 @@
                 </f:facet>
                 <h:form>
                     <h:commandLink value="Did that!" action="caregiver_procedure_create?faces-redirect=true">
-                        <f:setPropertyActionListener target="#{caregiverManager.currentTrainingMaterial}" value="#{trainingMaterial}" />
+                        <f:setPropertyActionListener target="#{caregiverManager.currentTrainingMaterial}" value="#{trainingMaterialDTO}" />
                     </h:commandLink>
                 </h:form>
             </h:column> 
@@ -96,14 +162,14 @@
                 <f:facet name="header">
                     <h:outputText value="Patient" />
                 </f:facet>
-                <h:outputText value="#{procedure.patient.name}" />
+                <h:outputText value="#{procedure.patientName}" />
                 <!--Falta validar o formato-->
             </h:column>
             <h:column>
                 <f:facet name="header">
                     <h:outputText value="Training Material" />
                 </f:facet>
-                <h:outputText value="#{procedure.trainingMaterial.name}" />
+                <h:outputText value="#{procedure.trainingMaterialName}" />
                 <!--Falta validar o formato-->
             </h:column>
 

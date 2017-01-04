@@ -1,17 +1,18 @@
 package web;
 
-import dtos.PatientDTO;
+import dtos.AdministratorDTO;
+import dtos.CaregiverDTO;
+import dtos.HealthcareProfDTO;
+import dtos.NeedDTO;
+import dtos.TrainingMaterialDTO;
 import ejbs.AdministratorBean;
 import ejbs.CaregiverBean;
 import ejbs.HealthcareProfBean;
 import ejbs.NeedBean;
-import ejbs.PatientBean;
 import ejbs.TrainingMaterialBean;
 import entities.Administrator;
 import entities.Caregiver;
 import entities.HealthcareProf;
-import entities.Need;
-import entities.Patient;
 import entities.TrainingMaterial;
 import enumerations.TRMAT;
 import exceptions.EntityAlreadyExistsException;
@@ -23,6 +24,7 @@ import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIInput;
@@ -31,9 +33,6 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.core.GenericType;
-import javax.ws.rs.core.MediaType;
 
 @ManagedBean
 @SessionScoped
@@ -50,28 +49,34 @@ public class AdministratorManager {
     @EJB
     private NeedBean needBean;
     private static final Logger logger = Logger.getLogger("web.AdministratorManager");
-    private Administrator currentAdministrator;
-    private Administrator newAdministrator;
-    private HealthcareProf currentHealthcareProf;
-    private HealthcareProf newHealthcareProf;
-    private Caregiver currentCaregiver;
-    private Caregiver newCaregiver;
-    private TrainingMaterial currentTrainingMaterial;
-    private TrainingMaterial newTrainingMaterial;
+    private AdministratorDTO currentAdministrator;
+    private AdministratorDTO newAdministrator;
+    private HealthcareProfDTO currentHealthcareProf;
+    private HealthcareProfDTO newHealthcareProf;
+    private CaregiverDTO currentCaregiver;
+    private CaregiverDTO newCaregiver;
+    private TrainingMaterialDTO currentTrainingMaterial;
+    private TrainingMaterialDTO newTrainingMaterial;
+    
+    @ManagedProperty("#{userManager}")
+    private UserManager userManager;
+    
+    
     private UIComponent component;
     private Client client;
     private final String baseUri = "http://localhost:8080/AcademicManagement_FICHA6-war/webapi";
     public AdministratorManager() {
-        newAdministrator = new Administrator();
-        newHealthcareProf= new HealthcareProf();
-        newCaregiver= new Caregiver();
-        newTrainingMaterial = new TrainingMaterial();
+        newAdministrator = new AdministratorDTO();
+        newHealthcareProf= new HealthcareProfDTO();
+        newCaregiver= new CaregiverDTO();
+        newTrainingMaterial = new TrainingMaterialDTO();
         
         client = ClientBuilder.newClient();
+        
     }
 
     //ADMINISTRATORS
-    public List<Administrator> getAllAdministrators() {
+    public List<AdministratorDTO> getAllAdministrators() {
         try {
             return administratorBean.getAll();
         } catch (Exception e) {
@@ -127,7 +132,7 @@ public class AdministratorManager {
     
     
     //HEALTHCAREPROFS
-    public List<HealthcareProf> getAllHealthcareProfs() {
+    public List<HealthcareProfDTO> getAllHealthcareProfs() {
         try {
             return healthcareProfBean.getAll();
         } catch (Exception e) {
@@ -183,7 +188,7 @@ public class AdministratorManager {
     
     
     //CAREGIVERS
-    public List<Caregiver> getAllCaregivers() {
+    public List<CaregiverDTO> getAllCaregivers() {
         try {
             return caregiverBean.getAll();
         } catch (Exception e) {
@@ -239,7 +244,7 @@ public class AdministratorManager {
     
     
     //TRAINING MATERIALS
-    public List<TrainingMaterial> getAllTrainingMaterials() {
+    public List<TrainingMaterialDTO> getAllTrainingMaterials() {
         try {
             return trainingMaterialBean.getAll();
         } catch (Exception e) {
@@ -286,7 +291,7 @@ public class AdministratorManager {
             UIParameter param = (UIParameter) event.getComponent().findComponent("trainingMaterialId");
             int id  = Integer.parseInt(param.getValue().toString());
             trainingMaterialBean.remove(id);
-        } catch (EntityDoesNotExistsException e) {
+        } catch (EntityDoesNotExistsException | MyConstraintViolationException e) {
             FacesExceptionHandler.handleException(e, e.getMessage(), logger);
         } catch (Exception e) {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
@@ -295,7 +300,7 @@ public class AdministratorManager {
     
                     //NEEDS
     
-    public List<Need> getEnrolledNeeds() {
+    public List<NeedDTO> getEnrolledNeeds() {
         try {
             return trainingMaterialBean.getEnrolledNeeds(currentTrainingMaterial.getId());
         } catch (EntityDoesNotExistsException e) {
@@ -306,7 +311,7 @@ public class AdministratorManager {
         return null;
     }
 
-    public List<Need> getTrainingMaterialNotNeeds() {
+    public List<NeedDTO> getTrainingMaterialNotNeeds() {
         try {
             return trainingMaterialBean.getTrainingMaterialNotNeeds(currentTrainingMaterial.getId());
         } catch (EntityDoesNotExistsException e) {
@@ -344,59 +349,59 @@ public class AdministratorManager {
     
     // GETTERS E SETTERS
 
-    public Administrator getCurrentAdministrator() {
+    public AdministratorDTO getCurrentAdministrator() {
         return currentAdministrator;
     }
 
-    public void setCurrentAdministrator(Administrator currentAdministrator) {
+    public void setCurrentAdministrator(AdministratorDTO currentAdministrator) {
         this.currentAdministrator = currentAdministrator;
     }
 
-    public HealthcareProf getCurrentHealthcareProf() {
+    public HealthcareProfDTO getCurrentHealthcareProf() {
         return currentHealthcareProf;
     }
 
-    public void setCurrentHealthcareProf(HealthcareProf currentHealthcareProf) {
+    public void setCurrentHealthcareProf(HealthcareProfDTO currentHealthcareProf) {
         this.currentHealthcareProf = currentHealthcareProf;
     }
 
-    public HealthcareProf getNewHealthcareProf() {
+    public HealthcareProfDTO getNewHealthcareProf() {
         return newHealthcareProf;
     }
 
-    public void setNewHealthcareProf(HealthcareProf newHealthcareProf) {
+    public void setNewHealthcareProf(HealthcareProfDTO newHealthcareProf) {
         this.newHealthcareProf = newHealthcareProf;
     }
 
-    public Caregiver getCurrentCaregiver() {
+    public CaregiverDTO getCurrentCaregiver() {
         return currentCaregiver;
     }
 
-    public void setCurrentCaregiver(Caregiver currentCaregiver) {
+    public void setCurrentCaregiver(CaregiverDTO currentCaregiver) {
         this.currentCaregiver = currentCaregiver;
     }
 
-    public Caregiver getNewCaregiver() {
+    public CaregiverDTO getNewCaregiver() {
         return newCaregiver;
     }
 
-    public void setNewCaregiver(Caregiver newCaregiver) {
+    public void setNewCaregiver(CaregiverDTO newCaregiver) {
         this.newCaregiver = newCaregiver;
     }
 
-    public TrainingMaterial getCurrentTrainingMaterial() {
+    public TrainingMaterialDTO getCurrentTrainingMaterial() {
         return currentTrainingMaterial;
     }
 
-    public void setCurrentTrainingMaterial(TrainingMaterial currentTrainingMaterial) {
+    public void setCurrentTrainingMaterial(TrainingMaterialDTO currentTrainingMaterial) {
         this.currentTrainingMaterial = currentTrainingMaterial;
     }
 
-    public TrainingMaterial getNewTrainingMaterial() {
+    public TrainingMaterialDTO getNewTrainingMaterial() {
         return newTrainingMaterial;
     }
 
-    public void setNewTrainingMaterial(TrainingMaterial newTrainingMaterial) {
+    public void setNewTrainingMaterial(TrainingMaterialDTO newTrainingMaterial) {
         this.newTrainingMaterial = newTrainingMaterial;
     }
     
@@ -411,11 +416,11 @@ public class AdministratorManager {
         this.component = component;
     }
 
-    public Administrator getNewAdministrator() {
+    public AdministratorDTO getNewAdministrator() {
         return newAdministrator;
     }
 
-    public void setNewAdministrator(Administrator newAdministrator) {
+    public void setNewAdministrator(AdministratorDTO newAdministrator) {
         this.newAdministrator = newAdministrator;
     }
 
@@ -423,6 +428,11 @@ public class AdministratorManager {
         return TRMAT.values();
     }
 
+    public void setUserManager(UserManager userManager) {
+        this.userManager = userManager;
+    }
+
+    
     
     
     ///////////// VALIDATORS ////////////////////////

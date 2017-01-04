@@ -5,6 +5,10 @@
  */
 package ejbs;
 
+import dtos.AdministratorDTO;
+import dtos.CaregiverDTO;
+import dtos.PatientDTO;
+import dtos.TrainingMaterialDTO;
 import entities.Administrator;
 import entities.Caregiver;
 import entities.Need;
@@ -25,7 +29,9 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.validation.ConstraintViolationException;
+import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -47,7 +53,7 @@ public class CaregiverBean {
             throws EntityAlreadyExistsException, MyConstraintViolationException{
         try {
             if (em.find(User.class, username) != null) {
-                throw new EntityAlreadyExistsException("A administrator with that username already exists.");
+                throw new EntityAlreadyExistsException("A user with that username already exists.");
             }
             em.persist(new Caregiver(username, password, name, email));
         } catch (EntityAlreadyExistsException e) {
@@ -59,32 +65,33 @@ public class CaregiverBean {
         }
     }
     
+    @GET
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Path("all")
-    public List<Caregiver> getAll() {
+    public List<CaregiverDTO> getAll() {
         try {
             List<Caregiver> caregivers = (List<Caregiver>) em.createNamedQuery("getAllCaregivers").getResultList();
-            return caregivers;
+            return caregiversToDTOs(caregivers);
         } catch (Exception e) {
             throw new EJBException(e.getMessage());
         }
     }
     
-    public Caregiver getCaregiver(String username) {
+    public CaregiverDTO getCaregiver(String username) {
         try {
             Caregiver caregiver = em.find(Caregiver.class, username);
             
-            return caregiver;
+            return caregiverToDTO(caregiver);
         } catch (Exception e) {
             throw new EJBException(e.getMessage());
         }
     }
     
-    public List<Caregiver> searchCaregiver (String name) {
+    public List<CaregiverDTO> searchCaregiver (String name) {
         try {
             List<Caregiver> caregivers = em.createNamedQuery("searchCaregivers").setParameter("name", name).getResultList();
             
-            return caregivers;
+            return caregiversToDTOs(caregivers);
         } catch (Exception e) {
             throw new EJBException(e.getMessage());
         }
@@ -173,7 +180,7 @@ public class CaregiverBean {
                 throw new EntityDoesNotExistsException("There is no caregiver with that username.");
             }
             
-            caregiver.setPassword(password);
+            caregiver.setCleanPassword(password); //Quando faz update já vem em hash
             caregiver.setName(name);
             caregiver.setEmail(email);
             em.merge(caregiver);
@@ -204,14 +211,18 @@ public class CaregiverBean {
         }
     }
     
-    public List<Patient> getEnrolledPatients(String caregiverUsername) throws EntityDoesNotExistsException{
+    
+    @GET
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Path("enrolledPatients/{username}")
+    public List<PatientDTO> getEnrolledPatients(@PathParam("username") String username) throws EntityDoesNotExistsException{
         try {
-            Caregiver caregiver = em.find(Caregiver.class, caregiverUsername);
+            Caregiver caregiver = em.find(Caregiver.class, username);
             if (caregiver == null) {
                 throw new EntityDoesNotExistsException("There is no caregiver with that username.");
             }           
             List<Patient> patientsEnrolled = (List<Patient>) caregiver.getPatients();
-            return patientsEnrolled;
+            return  patientsToDTOs(patientsEnrolled);
         } catch (EntityDoesNotExistsException e) {
             throw e;             
         } catch (Exception e) {
@@ -219,7 +230,7 @@ public class CaregiverBean {
         }
     }
     
-    public List<Patient> getUnrolledPatients() {
+    public List<PatientDTO> getUnrolledPatients() {
         try {
             List<Patient> patients = (List<Patient>) em.createNamedQuery("getAllPatients").getResultList();
             LinkedList<Patient> patientsUnrolled = new LinkedList<>();
@@ -229,13 +240,16 @@ public class CaregiverBean {
                 }
             }
 
-            return patientsUnrolled;            
+            return patientsToDTOs(patientsUnrolled);            
         } catch (Exception e) {
             throw new EJBException(e.getMessage());
         }
     }
 
-    public List<TrainingMaterial> getCaregiverTrainingMaterials(String username) {
+    @GET
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Path("caregiverTrainingMaterials/{username}")
+    public List<TrainingMaterialDTO> getCaregiverTrainingMaterials(@PathParam("username") String username) {
         try{
             Caregiver caregiver = em.find(Caregiver.class, username);
             if (caregiver == null) {
@@ -261,11 +275,61 @@ public class CaregiverBean {
                 }
             }
             
-            return trainingMaterialsClean;
+            return trainingMaterialsToDTOs(trainingMaterialsClean);
             
         } catch (Exception e) {
             throw new EJBException(e.getMessage());
         }
           
+    }
+    
+    CaregiverDTO caregiverToDTO(Caregiver caregiver) {
+        return new CaregiverDTO(
+                caregiver.getUsername(),
+                caregiver.getPassword(),
+                caregiver.getName(),
+                caregiver.getEmail());
+    }
+    
+    
+    List<CaregiverDTO> caregiversToDTOs(List<Caregiver> caregivers) {
+        List<CaregiverDTO> dtos = new ArrayList<>();
+        for (Caregiver c : caregivers) {
+            dtos.add(new CaregiverDTO(c.getUsername(), c.getPassword(), c.getName(), c.getEmail()));            
+        }
+        return dtos;
+    }
+    
+    PatientDTO patientToDTO(Patient patient) {
+        if(patient.getCaregiver() != null){
+            return new PatientDTO(patient.getId(), patient.getName(), patient.getCaregiver().getUsername());
+        } else {
+            return new PatientDTO(patient.getId(), patient.getName(), null); 
+        }
+        
+    }
+    
+    
+    List<PatientDTO> patientsToDTOs(List<Patient> patients) {
+        List<PatientDTO> dtos = new ArrayList<>();
+        for (Patient patient : patients) {
+            dtos.add(patientToDTO(patient));            
+        }
+        return dtos;
+    }
+    
+    TrainingMaterialDTO trainingMaterialToDTO(TrainingMaterial trainingMaterial) {
+        
+        return new TrainingMaterialDTO(trainingMaterial.getId(), trainingMaterial.getName(), 
+                trainingMaterial.getTipoTM(), trainingMaterial.getLink());
+    }
+    
+    
+    List<TrainingMaterialDTO> trainingMaterialsToDTOs(List<TrainingMaterial> trainingMaterials) {
+        List<TrainingMaterialDTO> dtos = new ArrayList<>();
+        for (TrainingMaterial trainingMaterial : trainingMaterials) {
+            dtos.add(trainingMaterialToDTO(trainingMaterial));            
+        }
+        return dtos;
     }
 }

@@ -78,7 +78,7 @@ public class ConfigBean {
             
             caregiverBean.enrollPatient("c1", 1);
             caregiverBean.enrollPatient("c1", 2);
-            caregiverBean.enrollPatient("c2", 3);
+            caregiverBean.enrollPatient("c1", 3);
             //caregiverBean.enrollPatient("11111", 3);
             
             procedureBean.create(1, 1, "c1", 1);

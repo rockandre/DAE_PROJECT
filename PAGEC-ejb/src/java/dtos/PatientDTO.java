@@ -21,24 +21,21 @@ public class PatientDTO implements Serializable{
     private int id;
     private String name;
     private String caregiverUsername;
-    private String carevigerName;
     
     public PatientDTO() {
         
     }
 
-    public PatientDTO(int id, String name, String caregiverUsername, String carevigerName) {
+    public PatientDTO(int id, String name, String caregiverUsername) {
         this.id = id;
         this.name = name;
         this.caregiverUsername = caregiverUsername;
-        this.carevigerName = carevigerName;
     }
 
     public void reset(){
         setId(0);
         setName(null);
         setCaregiverUsername(null);
-        setCarevigerName(null);
     }
     
     
@@ -50,14 +47,6 @@ public class PatientDTO implements Serializable{
         this.caregiverUsername = caregiverUsername;
     }
 
-    
-    public String getCarevigerName() {
-        return carevigerName;
-    }
-
-    public void setCarevigerName(String carevigerName) {
-        this.carevigerName = carevigerName;
-    }
     
     
 

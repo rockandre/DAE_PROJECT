@@ -5,6 +5,9 @@
  */
 package ejbs;
 
+import dtos.NeedDTO;
+import dtos.PatientDTO;
+import dtos.TrainingMaterialDTO;
 import entities.Caregiver;
 import entities.HealthcareProf;
 import entities.Need;
@@ -16,6 +19,7 @@ import exceptions.EntityAlreadyExistsException;
 import exceptions.EntityDoesNotExistsException;
 import exceptions.MyConstraintViolationException;
 import exceptions.Utils;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import javax.ejb.EJBException;
@@ -57,32 +61,35 @@ public class TrainingMaterialBean {
     
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Path("all")
-    public List<TrainingMaterial> getAll() {
+    public List<TrainingMaterialDTO> getAll() {
         try {
             List<TrainingMaterial> trainingMaterials = (List<TrainingMaterial>) em.createNamedQuery("getAllTrainingMaterials").getResultList();
-            return trainingMaterials;
+            return trainingMaterialsToDTOs(trainingMaterials);
         } catch (Exception e) {
             throw new EJBException(e.getMessage());
         }
     }
     
-    public void remove(int id) throws EntityDoesNotExistsException {
+    public void remove(int id) throws EntityDoesNotExistsException, MyConstraintViolationException {
         try {
             TrainingMaterial trainingMaterial = em.find(TrainingMaterial.class, id);
             if (trainingMaterial == null) {
                 throw new EntityDoesNotExistsException("There is no Training Material with that id.");
             }
-            
+            if(!trainingMaterial.getProcedures().isEmpty()){
+                throw new MyConstraintViolationException("There are procedures associated with that training material!");
+            }
+            if(!trainingMaterial.getNeeds().isEmpty()){
+                throw new MyConstraintViolationException("There are needs associated with that training material!");
+            }
             for (Need need : trainingMaterial.getNeeds()) {
                 need.removeTrainingMaterial(trainingMaterial);
             }
             
-            for (Procedure procedure : trainingMaterial.getProcedures()) {
-                procedure.setTrainingMaterial(null);
-            }
+            
             
             em.remove(trainingMaterial);
-        } catch (EntityDoesNotExistsException e) {
+        } catch (EntityDoesNotExistsException | MyConstraintViolationException e) {
             throw e;
         } catch (Exception e) {
             throw new EJBException(e.getMessage());
@@ -111,14 +118,14 @@ public class TrainingMaterialBean {
         }
     }
     
-    public List<Need> getEnrolledNeeds(int trainingMaterialId) throws EntityDoesNotExistsException{
+    public List<NeedDTO> getEnrolledNeeds(int trainingMaterialId) throws EntityDoesNotExistsException{
         try {
             TrainingMaterial trainingMaterial = em.find(TrainingMaterial.class, trainingMaterialId);
             if (trainingMaterial == null) {
                 throw new EntityDoesNotExistsException("There is no training material with that id.");
             }           
             List<Need> needsEnrolled = (List<Need>) trainingMaterial.getNeeds();
-            return needsEnrolled;
+            return needsToDTOs(needsEnrolled);
         } catch (EntityDoesNotExistsException e) {
             throw e;             
         } catch (Exception e) {
@@ -126,7 +133,7 @@ public class TrainingMaterialBean {
         }
     }
 
-    public List<Need> getTrainingMaterialNotNeeds(int trainingMaterialId) 
+    public List<NeedDTO> getTrainingMaterialNotNeeds(int trainingMaterialId) 
         throws EntityDoesNotExistsException{
         try {
             TrainingMaterial trainingMaterial = em.find(TrainingMaterial.class, trainingMaterialId);
@@ -140,11 +147,39 @@ public class TrainingMaterialBean {
                     needs.remove(need);
             }
 
-            return needs;   
+            return needsToDTOs(needs);   
         } catch (EntityDoesNotExistsException e) {
             throw e;
         } catch (Exception e) {
             throw new EJBException(e.getMessage());
         }
+    }
+    
+    TrainingMaterialDTO trainingMaterialToDTO(TrainingMaterial trainingMaterial) {
+        
+        return new TrainingMaterialDTO(trainingMaterial.getId(), trainingMaterial.getName(), 
+                trainingMaterial.getTipoTM(), trainingMaterial.getLink());
+    }
+    
+    
+    List<TrainingMaterialDTO> trainingMaterialsToDTOs(List<TrainingMaterial> trainingMaterials) {
+        List<TrainingMaterialDTO> dtos = new ArrayList<>();
+        for (TrainingMaterial trainingMaterial : trainingMaterials) {
+            dtos.add(trainingMaterialToDTO(trainingMaterial));            
+        }
+        return dtos;
+    }
+    
+    NeedDTO needToDTO(Need need) {
+        return new NeedDTO(need.getId(), need.getName());
+    }
+    
+    
+    List<NeedDTO> needsToDTOs(List<Need> needs) {
+        List<NeedDTO> dtos = new ArrayList<>();
+        for (Need need : needs) {
+            dtos.add(needToDTO(need));            
+        }
+        return dtos;
     }
 }

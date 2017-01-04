@@ -120,6 +120,19 @@ public class Patient implements Serializable {
         this.caregiver = null;
     }
     
+    public void addProcedure(Procedure procedure) {
+        procedures.add(procedure);
+    }
+
+    public void removeProcedure(Procedure procedure) {
+        procedures.remove(procedure);
+    }
+/*
+    @Override
+    public String toString() {
+        return "Id: " + id + ", Name: " + name;
+    }
     
     
+    */
 }

@@ -49,7 +49,6 @@ public class User implements Serializable {
         this.group = new UserGroup(group, this);
         this.name = name;
         this.email = email;
-        
     }
 
     private String hashPassword(String password) {
@@ -78,8 +77,12 @@ public class User implements Serializable {
         return password;
     }
 
-    public void setPassword(String password) {
+    public void setCleanPassword(String password) {
         this.password = hashPassword(password);
+    }
+    
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getName() {
