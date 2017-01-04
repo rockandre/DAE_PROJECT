@@ -1,0 +1,80 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <h:head>
+        <title>PAGEC</title>
+    </h:head>
+    <h:body>
+        <h2> Training Material </h2>
+        <h:panelGrid columns="2">
+
+            <h:outputLabel for="username" value="Id: " />
+            <h:outputText 
+                id="trainingMaterialId"
+                value="#{caregiverManager.currentTrainingMaterial.id}"/>
+
+            <h:outputLabel for="name" value="Name: " />
+            <h:outputText 
+                id="trainingMaterialName"
+                value="#{caregiverManager.currentTrainingMaterial.name}"/>
+
+            <h:outputLabel for="tipoTM" value="Type: " />
+            <h:outputText 
+                id="trainingMaterialTipoTM"
+                value="#{caregiverManager.currentTrainingMaterial.tipoTM}"/>
+            
+            <h:outputLabel for="link" value="Link: " />
+            <h:outputText 
+                id="trainingMaterialLink"
+                value="#{caregiverManager.currentTrainingMaterial.link}"/>
+
+
+        </h:panelGrid>
+        <br/>
+        <br/>
+        
+        <h3> New procedure:</h3>
+        <h:form>    
+            
+            <h:panelGrid columns="2">
+
+                <h:outputLabel for="id" value="ID: " />
+                <h:inputText 
+                    id="id"
+                    size="20"
+                    required="true"
+                    requiredMessage="Error: Username cannot be empty."
+                    value="#{caregiverManager.newProcedure.id}">
+                </h:inputText>
+                <h:message for="username" errorStyle="color: red" />
+
+                <!-- LISTA DOS SEUS PACIENTES -->
+                <h:outputLabel for="patient" value="Paciente: " />
+                <h:selectOneMenu value="#{caregiverManager.patientId}" >
+                    <f:selectItems value="#{caregiverManager.getEnrolledPatientsByUsername(userManager.username)}" var="patient"
+                                   itemLabel="#{patient.name}" itemValue="#{patient.id}" />
+                </h:selectOneMenu>
+                <h:message for="patient" errorStyle="color: red" />
+                
+
+                <br></br>
+
+
+                <br></br>
+
+                <h:commandButton
+                    id="submit"
+                    value="Create"
+                    binding="#{caregiverManager.component}" 
+                    action="#{caregiverManager.createProcedure(userManager.username)}" />
+                <h:message for="submit" style="color: red"/>
+            </h:panelGrid >                       
+
+        </h:form>
+
+        <h:messages style="color:red"/>       
+
+    </h:body>
+</html>
