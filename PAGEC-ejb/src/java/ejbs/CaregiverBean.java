@@ -5,11 +5,9 @@
  */
 package ejbs;
 
-import dtos.AdministratorDTO;
 import dtos.CaregiverDTO;
 import dtos.PatientDTO;
 import dtos.TrainingMaterialDTO;
-import entities.Administrator;
 import entities.Caregiver;
 import entities.Need;
 import entities.Patient;
@@ -34,9 +32,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
@@ -96,7 +91,7 @@ public class CaregiverBean {
             throw new EJBException(e.getMessage());
         }
     }
-    
+    /*
     public void remove(int code) throws EntityDoesNotExistsException {
         try {
             Caregiver caregiver = em.find(Caregiver.class, code);
@@ -115,7 +110,7 @@ public class CaregiverBean {
             throw new EJBException(e.getMessage());
         }
     } 
-    
+    */
     public void enrollPatient(String username, int patientId) 
             throws EntityDoesNotExistsException, EntityEnrolledException {
         try {
@@ -149,7 +144,7 @@ public class CaregiverBean {
         try {
             Patient patient = em.find(Patient.class, patientId);
             if(patient == null){
-                throw new EntityDoesNotExistsException("There is no Patient with that code.");
+                throw new EntityDoesNotExistsException("There is no Patient with that id.");
             }            
             
             Caregiver caregiver = em.find(Caregiver.class, username);

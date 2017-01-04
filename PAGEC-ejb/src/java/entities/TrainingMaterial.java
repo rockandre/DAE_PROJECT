@@ -11,8 +11,6 @@ import java.util.LinkedList;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
@@ -34,9 +32,7 @@ import javax.xml.bind.annotation.XmlTransient;
         = @UniqueConstraint(columnNames = {"NAME"}))
 @NamedQueries({
     @NamedQuery(name = "getAllTrainingMaterials",
-    query = "SELECT c FROM TrainingMaterial c ORDER BY c.name"),
-    //@NamedQuery(name = "getAllCoursesNames",
-    //query = "SELECT c.name FROM Course c ORDER BY c.name")
+    query = "SELECT c FROM TrainingMaterial c ORDER BY c.name")
 })
 @XmlRootElement
 public class TrainingMaterial implements Serializable {

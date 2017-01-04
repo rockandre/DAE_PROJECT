@@ -64,22 +64,21 @@ public class ConfigBean {
             needBean.enrollTrainingMaterial(1, 1);
             needBean.enrollTrainingMaterial(2, 2);
             needBean.enrollTrainingMaterial(3, 3);
-            //needBean.enrollTrainingMaterial(4, 4);
-            //needBean.enrollTrainingMaterial(5, 5);
+            needBean.enrollTrainingMaterial(4, 4);
+            needBean.enrollTrainingMaterial(5, 5);
                     
             patientBean.enrollNeed(1, 1);
             patientBean.enrollNeed(1, 2);
             patientBean.enrollNeed(1, 3);
             patientBean.enrollNeed(2, 2);
             patientBean.enrollNeed(3, 3);
-            //patientBean.enrollNeed(4, 4);
-            //patientBean.enrollNeed(5, 5);
+            patientBean.enrollNeed(4, 4);
+            patientBean.enrollNeed(5, 5);
             
             
             caregiverBean.enrollPatient("c1", 1);
             caregiverBean.enrollPatient("c1", 2);
             caregiverBean.enrollPatient("c1", 3);
-            //caregiverBean.enrollPatient("11111", 3);
             
             procedureBean.create(1, 1, "c1", 1);
             procedureBean.create(2, 1, "c1", 1);

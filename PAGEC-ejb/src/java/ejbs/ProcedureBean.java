@@ -144,7 +144,7 @@ public class ProcedureBean {
             throw new EJBException(e.getMessage());
         }
     }
-/*
+
     public void remove(int id) throws EntityDoesNotExistsException {
 
         try {
@@ -162,7 +162,7 @@ public class ProcedureBean {
             throw new EJBException(e.getMessage());
         }
     }
-    */
+    
     
     @GET
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})

@@ -1,11 +1,7 @@
 package ejbs;
 
-import dtos.AdministratorDTO;
 import dtos.HealthcareProfDTO;
-import dtos.PatientDTO;
-import entities.Administrator;
 import entities.HealthcareProf;
-import entities.Patient;
 import entities.User;
 import exceptions.EntityAlreadyExistsException;
 import exceptions.EntityDoesNotExistsException;
@@ -18,10 +14,6 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.validation.ConstraintViolationException;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
 
 @Stateless
 public class HealthcareProfBean {

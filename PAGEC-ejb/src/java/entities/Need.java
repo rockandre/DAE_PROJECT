@@ -5,13 +5,10 @@
  */
 package entities;
 
-import enumerations.TRMAT;
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -34,9 +31,7 @@ import javax.xml.bind.annotation.XmlTransient;
         = @UniqueConstraint(columnNames = {"NAME"}))
 @NamedQueries({
     @NamedQuery(name = "getAllNeeds",
-    query = "SELECT c FROM Need c ORDER BY c.name"),
-    //@NamedQuery(name = "getAllCoursesNames",
-    //query = "SELECT c.name FROM Course c ORDER BY c.name")
+    query = "SELECT c FROM Need c ORDER BY c.name")
 })
 @XmlRootElement
 public class Need implements Serializable {

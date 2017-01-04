@@ -24,6 +24,7 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+//import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
 
 
 @ManagedBean
@@ -55,7 +56,12 @@ public class CaregiverManager {
     
     public List<PatientDTO> getEnrolledPatientsByUsername(String username) {
         try {
-            client.register(new Authenticator(userManager.getUsername(), userManager.getPassword()));
+            //client.register(new Authenticator(userManager.getUsername(), userManager.getPassword()));
+            //HttpAuthenticationFeature feature =  null;
+
+            //feature = HttpAuthenticationFeature.basic("c1", "c1");
+ 
+            //client.register(feature);
             List<PatientDTO> patients = new ArrayList<>();
             patients = client.target(baseUri)
                     .path("/caregivers/enrolledPatients/" + username)
@@ -77,7 +83,7 @@ public class CaregiverManager {
     
     public List<NeedDTO> getPatientNeeds(int id) {
         try {
-            client.register(new Authenticator(userManager.getUsername(), userManager.getPassword()));
+            //client.register(new Authenticator(userManager.getUsername(), userManager.getPassword()));
             List<NeedDTO> needs = new ArrayList<>();
             needs = client.target(baseUri)
                     .path("/patients/patientNeeds/" + id)
@@ -100,7 +106,7 @@ public class CaregiverManager {
     
     public List<ProcedureDTO> proceduresByCaregiver(String username) {
         try {
-            client.register(new Authenticator(userManager.getUsername(), userManager.getPassword()));
+            //client.register(new Authenticator(userManager.getUsername(), userManager.getPassword()));
             List<ProcedureDTO> procedures = new ArrayList<>();
             procedures = client.target(baseUri)
                     .path("/procedures/proceduresByCaregiver/" + username)
@@ -120,7 +126,7 @@ public class CaregiverManager {
         try {
             
             ProcedureDTO procedureDTO = new ProcedureDTO(newProcedure.getId(), new Date(), patientId, "", caregiverUsername, "", currentTrainingMaterial.getId(), "");
-            client.register(new Authenticator(userManager.getUsername(), userManager.getPassword()));
+            //client.register(new Authenticator(userManager.getUsername(), userManager.getPassword()));
             WebTarget target = client.target(baseUri);
             target = target.path("/procedures/create/");
             Response response = target.request().put(Entity.xml(procedureDTO));
@@ -143,7 +149,7 @@ public class CaregiverManager {
     //TRAINING MATERIALS
     public List<TrainingMaterialDTO> caregiverTrainingMaterials(String username) {
         try {
-            client.register(new Authenticator(userManager.getUsername(), userManager.getPassword()));
+            //client.register(new Authenticator(userManager.getUsername(), userManager.getPassword()));
             List<TrainingMaterialDTO> trainingMaterials = new ArrayList<>();
             trainingMaterials = client.target(baseUri)
                     .path("/caregivers/caregiverTrainingMaterials/" + username)

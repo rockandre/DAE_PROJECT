@@ -1,13 +1,9 @@
 package ejbs;
 
-import dtos.CaregiverDTO;
 import dtos.NeedDTO;
 import dtos.PatientDTO;
-import entities.Caregiver;
 import entities.Need;
 import entities.Patient;
-import entities.Procedure;
-import entities.TrainingMaterial;
 import exceptions.EntityAlreadyExistsException;
 import exceptions.EntityDoesNotExistsException;
 import exceptions.EntityEnrolledException;
@@ -16,8 +12,6 @@ import exceptions.Utils;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import javax.annotation.security.DeclareRoles;
-import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJBException;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -31,7 +25,6 @@ import javax.ws.rs.core.MediaType;
 
 @Stateless
 @Path("/patients")
-@DeclareRoles({"Administrator", "Caregiver"})
 public class PatientBean {
 
     @PersistenceContext
@@ -95,7 +88,7 @@ public class PatientBean {
 
             Need need = em.find(Need.class, needId);
             if (need == null) {
-                throw new EntityDoesNotExistsException("There is no need with that code.");
+                throw new EntityDoesNotExistsException("There is no need with that id.");
             }
 
             if (patient.getNeeds().contains(need)) {
@@ -121,16 +114,16 @@ public class PatientBean {
         try {
             Need need = em.find(Need.class, needId);
             if(need == null){
-                throw new EntityDoesNotExistsException("There is no need with that code.");
+                throw new EntityDoesNotExistsException("There is no need with that id.");
             }            
             
             Patient patient = em.find(Patient.class, id);
             if(patient == null){
-                throw new EntityDoesNotExistsException("There is no patient with that username.");
+                throw new EntityDoesNotExistsException("There is no patient with that id.");
             }
             
             if(!need.getPatients().contains(patient)){
-                throw new Exception("Patient not enrolled");
+                throw new Exception("The patient don't have that need.");
             }            
             
             need.removePatient(patient);

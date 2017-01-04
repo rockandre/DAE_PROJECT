@@ -49,7 +49,7 @@ public class HealtcareProfManager {
     private Client client;
     @ManagedProperty("#{userManager}")
     private UserManager userManager;
-    private final String baseUri = "http://localhost:8080/AcademicManagement_FICHA6-war/webapi";
+    private final String baseUri = "http://localhost:8080/PAGEC-war/webapi";
     public HealtcareProfManager() {
         newCaregiver= new CaregiverDTO();
         newTrainingMaterial = new TrainingMaterialDTO();

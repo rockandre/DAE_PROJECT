@@ -10,10 +10,6 @@ import ejbs.CaregiverBean;
 import ejbs.HealthcareProfBean;
 import ejbs.NeedBean;
 import ejbs.TrainingMaterialBean;
-import entities.Administrator;
-import entities.Caregiver;
-import entities.HealthcareProf;
-import entities.TrainingMaterial;
 import enumerations.TRMAT;
 import exceptions.EntityAlreadyExistsException;
 import exceptions.EntityDoesNotExistsException;
@@ -58,20 +54,18 @@ public class AdministratorManager {
     private TrainingMaterialDTO currentTrainingMaterial;
     private TrainingMaterialDTO newTrainingMaterial;
     
-    @ManagedProperty("#{userManager}")
-    private UserManager userManager;
+    //@ManagedProperty("#{userManager}")
+    //private UserManager userManager;
     
     
     private UIComponent component;
-    private Client client;
-    private final String baseUri = "http://localhost:8080/AcademicManagement_FICHA6-war/webapi";
+    private final String baseUri = "http://localhost:8080/PAGEC-war/webapi";
     public AdministratorManager() {
         newAdministrator = new AdministratorDTO();
         newHealthcareProf= new HealthcareProfDTO();
         newCaregiver= new CaregiverDTO();
         newTrainingMaterial = new TrainingMaterialDTO();
         
-        client = ClientBuilder.newClient();
         
     }
 
@@ -428,9 +422,6 @@ public class AdministratorManager {
         return TRMAT.values();
     }
 
-    public void setUserManager(UserManager userManager) {
-        this.userManager = userManager;
-    }
 
     
     

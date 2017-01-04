@@ -6,13 +6,8 @@
 package ejbs;
 
 import dtos.NeedDTO;
-import dtos.PatientDTO;
 import dtos.TrainingMaterialDTO;
-import entities.Caregiver;
-import entities.HealthcareProf;
 import entities.Need;
-import entities.Patient;
-import entities.Procedure;
 import entities.TrainingMaterial;
 import enumerations.TRMAT;
 import exceptions.EntityAlreadyExistsException;
@@ -20,7 +15,6 @@ import exceptions.EntityDoesNotExistsException;
 import exceptions.MyConstraintViolationException;
 import exceptions.Utils;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import javax.ejb.EJBException;
 import javax.ejb.Stateless;
@@ -142,7 +136,6 @@ public class TrainingMaterialBean {
             }   
             List<Need> needs = (List<Need>) em.createNamedQuery("getAllNeeds").getResultList();
             List<Need> trainingMaterialNeeds = trainingMaterial.getNeeds();
-            LinkedList<Need> trainingMaterialNotNeeds = new LinkedList<>();
             for(Need need: trainingMaterialNeeds){
                     needs.remove(need);
             }

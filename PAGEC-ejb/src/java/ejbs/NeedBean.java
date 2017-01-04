@@ -1,9 +1,7 @@
 package ejbs;
 
 import dtos.NeedDTO;
-import dtos.PatientDTO;
 import entities.Need;
-import entities.Patient;
 import entities.TrainingMaterial;
 import exceptions.EntityAlreadyExistsException;
 import exceptions.EntityDoesNotExistsException;
@@ -93,7 +91,7 @@ public class NeedBean {
 
             Need need = em.find(Need.class, needId);
             if (need == null) {
-                throw new EntityDoesNotExistsException("There is no need with that code.");
+                throw new EntityDoesNotExistsException("There is no need with that id.");
             }
 
             if (trainingMaterial.getNeeds().contains(need)) {
@@ -101,7 +99,7 @@ public class NeedBean {
             }
 
             if (need.getTrainingMaterials().contains(trainingMaterial)) {
-                throw new EntityEnrolledException("Patient is already enrolled in that need.");
+                throw new EntityEnrolledException("Training material is already enrolled in that need.");
             }
 
             need.addTrainingMaterial(trainingMaterial);
@@ -119,16 +117,16 @@ public class NeedBean {
         try {
             Need need = em.find(Need.class, needId);
             if(need == null){
-                throw new EntityDoesNotExistsException("There is no need with that code.");
+                throw new EntityDoesNotExistsException("There is no need with that id.");
             }            
             
             TrainingMaterial trainingMaterial = em.find(TrainingMaterial.class, trainingMaterialId);
             if(trainingMaterial == null){
-                throw new EntityDoesNotExistsException("There is no patient with that username.");
+                throw new EntityDoesNotExistsException("There is no training material with that id.");
             }
             
             if(!need.getTrainingMaterials().contains(trainingMaterial)){
-                throw new EntityNotEnrolledException("Patient not enrolled");
+                throw new EntityNotEnrolledException("That training material is not enrolled in that need");
             }            
             
             need.removeTrainingMaterial(trainingMaterial);

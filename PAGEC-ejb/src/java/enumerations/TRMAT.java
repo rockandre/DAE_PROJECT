@@ -14,7 +14,6 @@ public enum TRMAT {
     TURORIAL,
     VIDEO,
     QUESTIONARIO,
-    PROCEDURE,
     OTHER
     
 }

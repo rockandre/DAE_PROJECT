@@ -2,7 +2,6 @@ package ejbs;
 
 import dtos.AdministratorDTO;
 import entities.Administrator;
-import entities.HealthcareProf;
 import entities.User;
 import exceptions.EntityAlreadyExistsException;
 import exceptions.EntityDoesNotExistsException;
