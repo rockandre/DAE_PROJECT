@@ -5,13 +5,9 @@
  */
 package enumerations;
 
-/**
- *
- * @author joaop
- */
 public enum GROUP {
     Administrator,
     HealthcareProf,
     Caregiver
-    
+
 }

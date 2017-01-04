@@ -16,31 +16,25 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 
-/**
- *
- * @author joaop
- */
 @Entity
 @Table(name = "USERS_GROUPS")
 @XmlRootElement
 public class UserGroup implements Serializable {
 
+    @Id
+    @Enumerated(EnumType.STRING)
+    private GROUP groupName;
+    @Id
+    @OneToOne
+    @JoinColumn(name = "USERNAME")
+    private User user;
 
-@Id
-@Enumerated(EnumType.STRING)
-private GROUP groupName;
-@Id
-@OneToOne
-@JoinColumn(name = "USERNAME")
-private User user;
-public UserGroup() {
-}
+    public UserGroup() {
+    }
 
-public UserGroup(GROUP group, User user) {
-       this.groupName = group;
-       this.user = user;
-}
+    public UserGroup(GROUP group, User user) {
+        this.groupName = group;
+        this.user = user;
+    }
 
-
-    
 }

@@ -5,15 +5,11 @@
  */
 package enumerations;
 
-/**
- *
- * @author joaop
- */
 public enum TRMAT {
     TEXT,
     TURORIAL,
     VIDEO,
     QUESTIONARIO,
     OTHER
-    
+
 }

@@ -10,19 +10,15 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
-/**
- *
- * @author joaop
- */
 @XmlRootElement(name = "HealthcareProf")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class HealthcareProfDTO extends UserDTO implements Serializable{
+public class HealthcareProfDTO extends UserDTO implements Serializable {
 
     public HealthcareProfDTO() {
     }
 
     public HealthcareProfDTO(String username, String password, String name, String email) {
-        super(username, password, name ,email);
+        super(username, password, name, email);
     }
 
 }

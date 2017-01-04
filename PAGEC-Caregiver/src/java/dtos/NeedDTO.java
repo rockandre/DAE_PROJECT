@@ -10,13 +10,10 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
-/**
- *
- * @author joaop
- */
 @XmlRootElement(name = "Need")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class NeedDTO implements Serializable{
+public class NeedDTO implements Serializable {
+
     int id;
     String name;
 
@@ -28,11 +25,11 @@ public class NeedDTO implements Serializable{
         this.name = name;
     }
 
-    public void reset(){
+    public void reset() {
         setId(0);
         setName(null);
     }
-    
+
     public int getId() {
         return id;
     }
@@ -48,7 +45,5 @@ public class NeedDTO implements Serializable{
     public void setName(String name) {
         this.name = name;
     }
-    
-    
-    
+
 }

@@ -11,13 +11,10 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
-/**
- *
- * @author joaop
- */
 @XmlRootElement(name = "TrainingMaterial")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class TrainingMaterialDTO implements Serializable{
+public class TrainingMaterialDTO implements Serializable {
+
     int id;
     String name;
     TRMAT tipoTM;
@@ -41,15 +38,13 @@ public class TrainingMaterialDTO implements Serializable{
         this.link = link;
     }
 
-    
-
-    public void reset(){
+    public void reset() {
         setId(0);
         setName(null);
         setTipoTM(null);
         setLink(null);
     }
-    
+
     public int getId() {
         return id;
     }
@@ -66,7 +61,6 @@ public class TrainingMaterialDTO implements Serializable{
         this.name = name;
     }
 
-
     public TRMAT getTipoTM() {
         return tipoTM;
     }
@@ -74,7 +68,5 @@ public class TrainingMaterialDTO implements Serializable{
     public void setTipoTM(TRMAT tipoTrainingMaterial) {
         this.tipoTM = tipoTrainingMaterial;
     }
-    
-    
-    
+
 }

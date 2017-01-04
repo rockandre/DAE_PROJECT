@@ -8,7 +8,7 @@ import javax.persistence.NamedQuery;
 @Entity
 @NamedQuery(name = "getAllAdministrators", query = "SELECT t FROM Administrator t ORDER BY t.name")
 public class Administrator extends User implements Serializable {
-    
+
     public Administrator() {
     }
 

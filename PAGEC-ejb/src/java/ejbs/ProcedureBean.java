@@ -40,25 +40,25 @@ public class ProcedureBean {
                 throw new EntityAlreadyExistsException("A procedure with that id already exists.");
             }
             Patient patient = em.find(Patient.class, patientId);
-            if(patient == null){
+            if (patient == null) {
                 throw new EntityDoesNotExistsException("There is no patient with that id.");
             }
-            
+
             Caregiver caregiver = em.find(Caregiver.class, caregiverUsername);
-            if(caregiver == null){
+            if (caregiver == null) {
                 throw new EntityDoesNotExistsException("There is no caregiver with that username.");
             }
-            
+
             TrainingMaterial trainingMaterial = em.find(TrainingMaterial.class, trainingMaterialId);
-            if(trainingMaterial == null){
+            if (trainingMaterial == null) {
                 throw new EntityDoesNotExistsException("There is no training material with that id.");
             }
-            for(Need need: patient.getNeeds()){
-                if(trainingMaterial.getNeeds().contains(need)){
-                    
+            for (Need need : patient.getNeeds()) {
+                if (trainingMaterial.getNeeds().contains(need)) {
+
                     em.persist(new Procedure(id, patient, caregiver, trainingMaterial));
                     Procedure procedure = em.find(Procedure.class, id);
-                    if(procedure == null){
+                    if (procedure == null) {
                         throw new EntityDoesNotExistsException("Error creating procedure.");
                     } else {
                         trainingMaterial.addProcedure(procedure);
@@ -69,9 +69,6 @@ public class ProcedureBean {
                 }
             }
             throw new EntityNotEnrolledException("The patient doesn't have any need with that training material!");
-            
-
-            
 
         } catch (EntityAlreadyExistsException | EntityDoesNotExistsException | EntityNotEnrolledException e) {
             throw e;
@@ -81,7 +78,7 @@ public class ProcedureBean {
             throw new EJBException(e.getMessage());
         }
     }
-    
+
     @PUT
     @Path("/create/")
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
@@ -92,25 +89,25 @@ public class ProcedureBean {
                 throw new EntityAlreadyExistsException("A procedure with that id already exists.");
             }
             Patient patient = em.find(Patient.class, procedure.getPatientId());
-            if(patient == null){
+            if (patient == null) {
                 throw new EntityDoesNotExistsException("There is no patient with that id.");
             }
-            
+
             Caregiver caregiver = em.find(Caregiver.class, procedure.getCaregiverUsername());
-            if(caregiver == null){
+            if (caregiver == null) {
                 throw new EntityDoesNotExistsException("There is no caregiver with that username.");
             }
-            
+
             TrainingMaterial trainingMaterial = em.find(TrainingMaterial.class, procedure.getTrainingMaterialId());
-            if(trainingMaterial == null){
+            if (trainingMaterial == null) {
                 throw new EntityDoesNotExistsException("There is no training material with that id.");
             }
-            for(Need need: patient.getNeeds()){
-                if(trainingMaterial.getNeeds().contains(need)){
-                    
+            for (Need need : patient.getNeeds()) {
+                if (trainingMaterial.getNeeds().contains(need)) {
+
                     em.persist(new Procedure(procedure.getId(), patient, caregiver, trainingMaterial));
                     Procedure procedure2 = em.find(Procedure.class, procedure.getId());
-                    if(procedure2 == null){
+                    if (procedure2 == null) {
                         throw new EntityDoesNotExistsException("Error creating procedure.");
                     } else {
                         trainingMaterial.addProcedure(procedure2);
@@ -121,9 +118,6 @@ public class ProcedureBean {
                 }
             }
             throw new EntityNotEnrolledException("The patient doesn't have any need with that training material!");
-            
-
-            
 
         } catch (EntityAlreadyExistsException | EntityDoesNotExistsException | EntityNotEnrolledException e) {
             throw e;
@@ -133,7 +127,7 @@ public class ProcedureBean {
             throw new EJBException(e.getMessage());
         }
     }
-    
+
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Path("all")
     public List<ProcedureDTO> getAll() {
@@ -152,8 +146,7 @@ public class ProcedureBean {
             if (procedure == null) {
                 throw new EntityDoesNotExistsException("There is no patient with that id");
             }
-            //falta remover de onde é usada
-            
+
             em.remove(procedure);
 
         } catch (EntityDoesNotExistsException e) {
@@ -162,8 +155,7 @@ public class ProcedureBean {
             throw new EJBException(e.getMessage());
         }
     }
-    
-    
+
     @GET
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Path("proceduresByCaregiver/{username}")
@@ -177,18 +169,17 @@ public class ProcedureBean {
             throw new EJBException(e.getMessage());
         }
     }
-    
+
     ProcedureDTO procedureToDTO(Procedure procedure) {
-        return new ProcedureDTO(procedure.getId(), procedure.getDate(), procedure.getPatient().getId(), procedure.getPatient().getName() , procedure.getCaregiver().getUsername(), procedure.getCaregiver().getName(), procedure.getTrainingMaterial().getId(), procedure.getTrainingMaterial().getName());
+        return new ProcedureDTO(procedure.getId(), procedure.getDate(), procedure.getPatient().getId(), procedure.getPatient().getName(), procedure.getCaregiver().getUsername(), procedure.getCaregiver().getName(), procedure.getTrainingMaterial().getId(), procedure.getTrainingMaterial().getName());
     }
-    
-    
+
     List<ProcedureDTO> proceduresToDTOs(List<Procedure> procedures) {
         List<ProcedureDTO> dtos = new ArrayList<>();
         for (Procedure procedure : procedures) {
-            dtos.add(procedureToDTO(procedure));            
+            dtos.add(procedureToDTO(procedure));
         }
         return dtos;
     }
-    
+
 }

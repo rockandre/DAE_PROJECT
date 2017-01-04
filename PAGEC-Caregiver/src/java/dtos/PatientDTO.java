@@ -10,20 +10,16 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
-/**
- *
- * @author rockandre
- */
 @XmlRootElement(name = "Patient")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class PatientDTO implements Serializable{
+public class PatientDTO implements Serializable {
 
     private int id;
     private String name;
     private String caregiverUsername;
-    
+
     public PatientDTO() {
-        
+
     }
 
     public PatientDTO(int id, String name, String caregiverUsername) {
@@ -32,13 +28,12 @@ public class PatientDTO implements Serializable{
         this.caregiverUsername = caregiverUsername;
     }
 
-    public void reset(){
+    public void reset() {
         setId(0);
         setName(null);
         setCaregiverUsername(null);
     }
-    
-    
+
     public String getCaregiverUsername() {
         return caregiverUsername;
     }
@@ -46,9 +41,6 @@ public class PatientDTO implements Serializable{
     public void setCaregiverUsername(String caregiverUsername) {
         this.caregiverUsername = caregiverUsername;
     }
-
-    
-    
 
     public int getId() {
         return id;

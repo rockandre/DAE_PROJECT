@@ -17,38 +17,34 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 
-/**
- *
- * @author joaop
- */
 @Entity
 @Table(name = "PROCEDURES")
 @NamedQueries({
     @NamedQuery(name = "getAllProcedures",
-    query = "SELECT c FROM Procedure c ORDER BY c.id"),
+            query = "SELECT c FROM Procedure c ORDER BY c.id")
+    ,
     @NamedQuery(name = "getProceduresByCaregiver",
-    query = "SELECT c FROM Procedure c WHERE c.caregiver.username = :caregiverUsername")
+            query = "SELECT c FROM Procedure c WHERE c.caregiver.username = :caregiverUsername")
 })
 @XmlRootElement
 public class Procedure implements Serializable {
 
     @Id
     private int id;
-    
+
     @NotNull
     private Date date; //mudar
     @ManyToOne
     @JoinColumn(name = "PATIENT_ID")
     private Patient patient;
-    
+
     @ManyToOne
     @JoinColumn(name = "CAREGIVER_ID")
     private Caregiver caregiver;
-    
+
     @ManyToOne
     @JoinColumn(name = "TRAININGMATERIAL_ID")
     private TrainingMaterial trainingMaterial;
-    
 
     public Procedure() {
     }
@@ -77,7 +73,6 @@ public class Procedure implements Serializable {
         this.date = date;
     }
 
-    
     public Patient getPatient() {
         return patient;
     }
@@ -102,7 +97,4 @@ public class Procedure implements Serializable {
         this.trainingMaterial = trainingMaterial;
     }
 
-    
-    
-    
 }

@@ -25,7 +25,6 @@ import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-
 @ManagedBean
 @SessionScoped
 public class CaregiverManager {
@@ -43,16 +42,14 @@ public class CaregiverManager {
     private UIComponent component;
     private Client client;
     private final String baseUri = "http://localhost:8080/PAGEC-war/webapi";
+
     public CaregiverManager() {
-        newCaregiver= new CaregiverDTO();
+        newCaregiver = new CaregiverDTO();
         newTrainingMaterial = new TrainingMaterialDTO();
         newProcedure = new ProcedureDTO();
         client = ClientBuilder.newClient();
     }
 
-    
-    
-    
     public List<PatientDTO> getEnrolledPatientsByUsername(String username) {
         try {
             List<PatientDTO> patients = new ArrayList<>();
@@ -61,108 +58,78 @@ public class CaregiverManager {
                     .request(MediaType.APPLICATION_XML)
                     .get(new GenericType<List<PatientDTO>>() {
                     });
-            
-            return patients; //caregiverBean.getEnrolledPatients(username);
-        /*} catch (EntityDoesNotExistsException e) {
-            FacesExceptionHandler.handleException(e, e.getMessage(), logger);*/
+
+            return patients;
         } catch (Exception e) {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
         }
         return null;
     }
-    
-                                //NEEDS
-    
+
+    //NEEDS
     public List<NeedDTO> getPatientNeeds(int id) {
         try {
-            //client.register(new Authenticator(userManager.getUsername(), userManager.getPassword()));
             List<NeedDTO> needs = new ArrayList<>();
             needs = client.target(baseUri)
                     .path("/patients/patientNeeds/" + id)
-                    //.queryParam("username", username)
                     .request(MediaType.APPLICATION_XML)
                     .get(new GenericType<List<NeedDTO>>() {
                     });
-            
-            return needs;//patientBean.getNeeds(id);
-        /*} catch (EntityDoesNotExistsException e) {
-            FacesExceptionHandler.handleException(e, e.getMessage(), logger);*/
+
+            return needs;
         } catch (Exception e) {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
         }
         return null;
     }
-    
-    
+
     //PROCEDURES
-    
     public List<ProcedureDTO> proceduresByCaregiver(String username) {
         try {
-            //client.register(new Authenticator(userManager.getUsername(), userManager.getPassword()));
             List<ProcedureDTO> procedures = new ArrayList<>();
             procedures = client.target(baseUri)
                     .path("/procedures/proceduresByCaregiver/" + username)
-                    //.queryParam("username", username)
                     .request(MediaType.APPLICATION_XML)
                     .get(new GenericType<List<ProcedureDTO>>() {
                     });
-            //String username = userManager.getUsername();
-            return procedures;//procedureBean.getProceduresByCaregiver(username);
+            return procedures;
         } catch (Exception e) {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
         }
         return null;
     }
-    
+
     public String createProcedure(String caregiverUsername) {
         try {
-            
+
             ProcedureDTO procedureDTO = new ProcedureDTO(newProcedure.getId(), new Date(), patientId, "", caregiverUsername, "", currentTrainingMaterial.getId(), "");
-            //client.register(new Authenticator(userManager.getUsername(), userManager.getPassword()));
             WebTarget target = client.target(baseUri);
             target = target.path("/procedures/create/");
             Response response = target.request().put(Entity.xml(procedureDTO));
-            /*
-            procedureBean.create(
-                    newProcedure.getId(),
-                    patientId,
-                    caregiverUsername,
-                    currentTrainingMaterial.getId());*/
             return "/faces/caregiver/caregiver_index?faces-redirect=true";
-        /*} catch (EntityAlreadyExistsException | MyConstraintViolationException | EntityNotEnrolledException | EntityDoesNotExistsException e) {
-            FacesExceptionHandler.handleException(e, e.getMessage(), component, logger);*/
         } catch (Exception e) {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", component, logger);
         }
         return null;
     }
-    
-    
+
     //TRAINING MATERIALS
     public List<TrainingMaterialDTO> caregiverTrainingMaterials(String username) {
         try {
-            //client.register(new Authenticator(userManager.getUsername(), userManager.getPassword()));
             List<TrainingMaterialDTO> trainingMaterials = new ArrayList<>();
             trainingMaterials = client.target(baseUri)
                     .path("/caregivers/caregiverTrainingMaterials/" + username)
-                    //.queryParam("username", username)
                     .request(MediaType.APPLICATION_XML)
                     .get(new GenericType<List<TrainingMaterialDTO>>() {
                     });
-            return trainingMaterials;//caregiverBean.getCaregiverTrainingMaterials(username);
+            return trainingMaterials;
         } catch (Exception e) {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
         }
         return null;
     }
-    
-    
-    
-    
-    
+
     // GETTERS E SETTERS
-
-
     public CaregiverDTO getCurrentCaregiver() {
         return currentCaregiver;
     }
@@ -194,12 +161,11 @@ public class CaregiverManager {
     public void setNewTrainingMaterial(TrainingMaterialDTO newTrainingMaterial) {
         this.newTrainingMaterial = newTrainingMaterial;
     }
-    
+
     public TRMAT[] getTRMATs() {
         return TRMAT.values();
     }
-    
-    
+
     public UIComponent getComponent() {
         return component;
     }
@@ -224,7 +190,7 @@ public class CaregiverManager {
         this.newProcedure = newProcedure;
     }
 
-   public int getPatientId() {
+    public int getPatientId() {
         return patientId;
     }
 
@@ -236,11 +202,6 @@ public class CaregiverManager {
         this.userManager = userManager;
     }
 
-    
-    
-
-
-    
     ///////////// VALIDATORS ////////////////////////
     public void validateUsername(FacesContext context, UIComponent toValidate, Object value) {
         try {

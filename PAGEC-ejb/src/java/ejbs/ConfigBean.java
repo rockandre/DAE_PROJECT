@@ -16,13 +16,13 @@ public class ConfigBean {
     private PatientBean patientBean;
     @EJB
     private NeedBean needBean;
-    
+
     @EJB
     private CaregiverBean caregiverBean;
-    
+
     @EJB
     private TrainingMaterialBean trainingMaterialBean;
-    
+
     @EJB
     private ProcedureBean procedureBean;
     @EJB
@@ -32,7 +32,7 @@ public class ConfigBean {
     public void populateBD() {
 
         try {
-            
+
             administratorBean.create("a1", "a1", "a1", "a1@ipleiria.pt");
             administratorBean.create("a2", "a2", "a2", "a2@ipleiria.pt");
             administratorBean.create("a3", "a3", "a3", "a3@ipleiria.pt");
@@ -60,13 +60,13 @@ public class ConfigBean {
             trainingMaterialBean.create(3, "Treinar musculos lesionados", TRMAT.TEXT, "http://musculos.pt/");
             trainingMaterialBean.create(4, "Como fazer massagens na cabeca", TRMAT.TURORIAL, "http://massagens.pt/");
             trainingMaterialBean.create(5, "Como meter gotas nos olhos", TRMAT.TURORIAL, "http://olhos.pt/");
-            
+
             needBean.enrollTrainingMaterial(1, 1);
             needBean.enrollTrainingMaterial(2, 2);
             needBean.enrollTrainingMaterial(3, 3);
             needBean.enrollTrainingMaterial(4, 4);
             needBean.enrollTrainingMaterial(5, 5);
-                    
+
             patientBean.enrollNeed(1, 1);
             patientBean.enrollNeed(1, 2);
             patientBean.enrollNeed(1, 3);
@@ -74,22 +74,19 @@ public class ConfigBean {
             patientBean.enrollNeed(3, 3);
             patientBean.enrollNeed(4, 4);
             patientBean.enrollNeed(5, 5);
-            
-            
+
             caregiverBean.enrollPatient("c1", 1);
             caregiverBean.enrollPatient("c1", 2);
             caregiverBean.enrollPatient("c1", 3);
-            
+
             procedureBean.create(1, 1, "c1", 1);
             procedureBean.create(2, 1, "c1", 1);
             procedureBean.create(3, 1, "c1", 2);
             procedureBean.create(4, 1, "c2", 1);
             procedureBean.create(5, 1, "c2", 2);
-            
 
-            
         } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());
-        } 
+        }
     }
 }

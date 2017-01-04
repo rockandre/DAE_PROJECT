@@ -16,7 +16,7 @@
                     value="#{administratorManager.currentTrainingMaterial.id}"
                     />
                 <br></br>
-                
+
                 <h:outputLabel for="name" value="Name: " />
                 <h:inputText 
                     id="name"
@@ -31,7 +31,7 @@
                     <f:selectItems value="#{administratorManager.TRMATs}" />
                 </h:selectOneMenu>
                 <h:message for="tipoTM" errorStyle="color: red" />
-                
+
                 <h:outputLabel for="link" value="Link: " />
                 <h:inputText
                     id="link"
@@ -43,7 +43,7 @@
                 <h:message for="link" errorStyle="color: red" />
 
                 <br></br>
-                
+
                 <br></br>
 
                 <h:commandButton
@@ -54,7 +54,7 @@
             </h:panelGrid>  
 
         </h:form>
-        
+
         <h:messages errorStyle="color: red" />        
 
     </h:body>

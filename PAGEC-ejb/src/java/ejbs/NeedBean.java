@@ -44,7 +44,7 @@ public class NeedBean {
             throw new EJBException(e.getMessage());
         }
     }
-    
+
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Path("all")
     public List<NeedDTO> getAll() {
@@ -64,13 +64,10 @@ public class NeedBean {
                 throw new EntityDoesNotExistsException("There is no patient with that id");
             }
 
-            for(TrainingMaterial trainingMaterial: need.getTrainingMaterials()){
+            for (TrainingMaterial trainingMaterial : need.getTrainingMaterials()) {
                 trainingMaterial.removeNeed(need);
             }
-            
-            
-            
-            
+
             em.remove(need);
 
         } catch (EntityDoesNotExistsException e) {
@@ -79,9 +76,9 @@ public class NeedBean {
             throw new EJBException(e.getMessage());
         }
     }
-    
-    public void enrollTrainingMaterial(int needId, int trainingMaterialId) 
-            throws EntityDoesNotExistsException, EntityEnrolledException{
+
+    public void enrollTrainingMaterial(int needId, int trainingMaterialId)
+            throws EntityDoesNotExistsException, EntityEnrolledException {
         try {
 
             TrainingMaterial trainingMaterial = em.find(TrainingMaterial.class, trainingMaterialId);
@@ -113,22 +110,22 @@ public class NeedBean {
     }
 
     public void unrollTrainingMaterial(int needId, int trainingMaterialId)
-            throws EntityDoesNotExistsException, EntityNotEnrolledException{
+            throws EntityDoesNotExistsException, EntityNotEnrolledException {
         try {
             Need need = em.find(Need.class, needId);
-            if(need == null){
+            if (need == null) {
                 throw new EntityDoesNotExistsException("There is no need with that id.");
-            }            
-            
+            }
+
             TrainingMaterial trainingMaterial = em.find(TrainingMaterial.class, trainingMaterialId);
-            if(trainingMaterial == null){
+            if (trainingMaterial == null) {
                 throw new EntityDoesNotExistsException("There is no training material with that id.");
             }
-            
-            if(!need.getTrainingMaterials().contains(trainingMaterial)){
+
+            if (!need.getTrainingMaterials().contains(trainingMaterial)) {
                 throw new EntityNotEnrolledException("That training material is not enrolled in that need");
-            }            
-            
+            }
+
             need.removeTrainingMaterial(trainingMaterial);
             trainingMaterial.removeNeed(need);
         } catch (EntityDoesNotExistsException | EntityNotEnrolledException e) {
@@ -137,18 +134,17 @@ public class NeedBean {
             throw new EJBException(e.getMessage());
         }
     }
-    
+
     NeedDTO needToDTO(Need need) {
         return new NeedDTO(need.getId(), need.getName());
     }
-    
-    
+
     List<NeedDTO> needsToDTOs(List<Need> needs) {
         List<NeedDTO> dtos = new ArrayList<>();
         for (Need need : needs) {
-            dtos.add(needToDTO(need));            
+            dtos.add(needToDTO(need));
         }
         return dtos;
     }
-    
+
 }

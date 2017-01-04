@@ -47,17 +47,14 @@ public class HealtcareProfManager {
     private TrainingMaterialDTO newTrainingMaterial;
     private UIComponent component;
     private Client client;
-    @ManagedProperty("#{userManager}")
-    private UserManager userManager;
     private final String baseUri = "http://localhost:8080/PAGEC-war/webapi";
+
     public HealtcareProfManager() {
-        newCaregiver= new CaregiverDTO();
+        newCaregiver = new CaregiverDTO();
         newTrainingMaterial = new TrainingMaterialDTO();
         client = ClientBuilder.newClient();
     }
 
-    
-    
     //CAREGIVERS
     public List<CaregiverDTO> getAllCaregivers() {
         try {
@@ -67,7 +64,7 @@ public class HealtcareProfManager {
         }
         return null;
     }
-    
+
     public String createCaregiver() {
         try {
             caregiverBean.create(
@@ -83,7 +80,7 @@ public class HealtcareProfManager {
         }
         return null;
     }
-    
+
     public String updateCaregiver() {
         try {
             caregiverBean.update(
@@ -100,7 +97,7 @@ public class HealtcareProfManager {
         }
         return "healthcareProf_caregivers_update";
     }
-    
+
     public void removeCaregiver(ActionEvent event) {
         try {
             UIParameter param = (UIParameter) event.getComponent().findComponent("caregiverUsername");
@@ -112,8 +109,7 @@ public class HealtcareProfManager {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
         }
     }
-    
-    
+
     public List<PatientDTO> getEnrolledPatients() {
         try {
             return caregiverBean.getEnrolledPatients(currentCaregiver.getUsername());
@@ -137,7 +133,7 @@ public class HealtcareProfManager {
     public void enrollPatient(ActionEvent event) {
         try {
             UIParameter param = (UIParameter) event.getComponent().findComponent("patientId");
-            int id  = Integer.parseInt(param.getValue().toString());
+            int id = Integer.parseInt(param.getValue().toString());
             caregiverBean.enrollPatient(currentCaregiver.getUsername(), id);
         } catch (EntityDoesNotExistsException e) {
             FacesExceptionHandler.handleException(e, e.getMessage(), logger);
@@ -149,7 +145,7 @@ public class HealtcareProfManager {
     public void unrollPatient(ActionEvent event) {
         try {
             UIParameter param = (UIParameter) event.getComponent().findComponent("patientId");
-            int id  = Integer.parseInt(param.getValue().toString());
+            int id = Integer.parseInt(param.getValue().toString());
             caregiverBean.unrollPatient(currentCaregiver.getUsername(), id);
         } catch (EntityDoesNotExistsException e) {
             FacesExceptionHandler.handleException(e, e.getMessage(), logger);
@@ -157,8 +153,8 @@ public class HealtcareProfManager {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
         }
     }
-                                //NEEDS
-    
+    //NEEDS
+
     public List<NeedDTO> getPatientNeeds(int id) {
         try {
             return patientBean.getNeeds(id);
@@ -169,7 +165,7 @@ public class HealtcareProfManager {
         }
         return null;
     }
-    
+
     public List<NeedDTO> getPatientNotNeeds(int id) {
         try {
             return patientBean.getUnrolledNeeds(id);
@@ -180,13 +176,13 @@ public class HealtcareProfManager {
         }
         return null;
     }
-    
+
     public void unrollPatientNeed(ActionEvent event) {
         try {
             UIParameter param = (UIParameter) event.getComponent().findComponent("needId");
-            int needId  = Integer.parseInt(param.getValue().toString());
+            int needId = Integer.parseInt(param.getValue().toString());
             UIParameter param2 = (UIParameter) event.getComponent().findComponent("patientId");
-            int patientId  = Integer.parseInt(param2.getValue().toString());
+            int patientId = Integer.parseInt(param2.getValue().toString());
             patientBean.unrollNeed(patientId, needId);
         } catch (EntityDoesNotExistsException e) {
             FacesExceptionHandler.handleException(e, e.getMessage(), logger);
@@ -194,13 +190,13 @@ public class HealtcareProfManager {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
         }
     }
-    
+
     public void enrollPatientNeed(ActionEvent event) {
         try {
             UIParameter param = (UIParameter) event.getComponent().findComponent("needId");
-            int needId  = Integer.parseInt(param.getValue().toString());
+            int needId = Integer.parseInt(param.getValue().toString());
             UIParameter param2 = (UIParameter) event.getComponent().findComponent("patientId");
-            int patientId  = Integer.parseInt(param2.getValue().toString());
+            int patientId = Integer.parseInt(param2.getValue().toString());
             patientBean.enrollNeed(patientId, needId);
         } catch (EntityDoesNotExistsException | EntityEnrolledException e) {
             FacesExceptionHandler.handleException(e, e.getMessage(), logger);
@@ -209,7 +205,6 @@ public class HealtcareProfManager {
         }
     }
 
-    
     //TRAINING MATERIALS
     public List<TrainingMaterialDTO> getAllTrainingMaterials() {
         try {
@@ -219,7 +214,7 @@ public class HealtcareProfManager {
         }
         return null;
     }
-    
+
     public String createTrainingMaterial() {
         try {
             trainingMaterialBean.create(
@@ -235,7 +230,7 @@ public class HealtcareProfManager {
         }
         return null;
     }
-    
+
     public String updateTrainingMaterial() {
         try {
             trainingMaterialBean.update(
@@ -252,11 +247,11 @@ public class HealtcareProfManager {
         }
         return "healthcareProf_trainingmaterials_update";
     }
-    
+
     public void removeTrainingMaterial(ActionEvent event) {
         try {
             UIParameter param = (UIParameter) event.getComponent().findComponent("trainingMaterialId");
-            int id  = Integer.parseInt(param.getValue().toString());
+            int id = Integer.parseInt(param.getValue().toString());
             trainingMaterialBean.remove(id);
         } catch (EntityDoesNotExistsException | MyConstraintViolationException e) {
             FacesExceptionHandler.handleException(e, e.getMessage(), logger);
@@ -264,9 +259,8 @@ public class HealtcareProfManager {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
         }
     }
-    
-                            //NEEDS
-    
+
+    //NEEDS
     public List<NeedDTO> getEnrolledNeeds() {
         try {
             return trainingMaterialBean.getEnrolledNeeds(currentTrainingMaterial.getId());
@@ -277,16 +271,7 @@ public class HealtcareProfManager {
         }
         return null;
     }
-/*
-    public List<NeedDTO> getAllNeeds() {
-        try {
-            return needBean.getAll();
-        } catch (Exception e) {
-            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
-        }
-        return null;
-    }*/
-    
+
     public List<NeedDTO> getTrainingMaterialNotNeeds() {
         try {
             return trainingMaterialBean.getTrainingMaterialNotNeeds(currentTrainingMaterial.getId());
@@ -301,7 +286,7 @@ public class HealtcareProfManager {
     public void enrollNeed(ActionEvent event) {
         try {
             UIParameter param = (UIParameter) event.getComponent().findComponent("needId");
-            int id  = Integer.parseInt(param.getValue().toString());
+            int id = Integer.parseInt(param.getValue().toString());
             needBean.enrollTrainingMaterial(id, currentTrainingMaterial.getId());
         } catch (EntityDoesNotExistsException | EntityEnrolledException e) {
             FacesExceptionHandler.handleException(e, e.getMessage(), logger);
@@ -313,7 +298,7 @@ public class HealtcareProfManager {
     public void unrollNeed(ActionEvent event) {
         try {
             UIParameter param = (UIParameter) event.getComponent().findComponent("needId");
-            int id  = Integer.parseInt(param.getValue().toString());
+            int id = Integer.parseInt(param.getValue().toString());
             needBean.unrollTrainingMaterial(id, currentTrainingMaterial.getId());
         } catch (EntityDoesNotExistsException e) {
             FacesExceptionHandler.handleException(e, e.getMessage(), logger);
@@ -321,11 +306,8 @@ public class HealtcareProfManager {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
         }
     }
-    
-    
+
     // GETTERS E SETTERS
-
-
     public CaregiverDTO getCurrentCaregiver() {
         return currentCaregiver;
     }
@@ -357,12 +339,11 @@ public class HealtcareProfManager {
     public void setNewTrainingMaterial(TrainingMaterialDTO newTrainingMaterial) {
         this.newTrainingMaterial = newTrainingMaterial;
     }
-    
+
     public TRMAT[] getTRMATs() {
         return TRMAT.values();
     }
-    
-    
+
     public UIComponent getComponent() {
         return component;
     }
@@ -372,13 +353,6 @@ public class HealtcareProfManager {
     }
 
 
-    public void setUserManager(UserManager userManager) {
-        this.userManager = userManager;
-    }
-
-    
-
-    
     ///////////// VALIDATORS ////////////////////////
     public void validateUsername(FacesContext context, UIComponent toValidate, Object value) {
         try {

@@ -15,7 +15,7 @@
             value="#{administratorManager.allAdministrators}"
             rules="all"
             cellpadding="4">
-            
+
             <f:facet name="header">
                 <h:outputText value="Administrators" />
             </f:facet>            
@@ -41,8 +41,8 @@
                 </f:facet>
                 <h:outputText value="#{administrator.email}" />
             </h:column>                        
-                     
-            
+
+
             <h:column>
                 <f:facet name="header">
                     <h:outputText value="Actions" />
@@ -61,25 +61,25 @@
                     </h:commandLink>
                 </h:form>
             </h:column>                        
-               
+
         </h:dataTable>
-        
+
         <br/>
-        
+
         <h:form>
             <h:commandLink value="New administrator" action="admin_admins_create?faces-redirect=true"/>
         </h:form>
-        
+
         <br/>
         <br/>  
-        
+
         <h:dataTable
             var="healthcareProf"
             summary="List of all HealthcareProfs"
             value="#{administratorManager.allHealthcareProfs}"
             rules="all"
             cellpadding="4">
-            
+
             <f:facet name="header">
                 <h:outputText value="HealthcareProfs" />
             </f:facet>            
@@ -105,8 +105,8 @@
                 </f:facet>
                 <h:outputText value="#{healthcareProf.email}" />
             </h:column>                        
-                     
-            
+
+
             <h:column>
                 <f:facet name="header">
                     <h:outputText value="Actions" />
@@ -125,27 +125,27 @@
                     </h:commandLink>
                 </h:form>
             </h:column>                        
-               
+
         </h:dataTable>
 
         <br/>
-        
+
         <h:form>
             <h:commandLink value="New HealthcareProf" action="admin_healthcareprofs_create?faces-redirect=true"/>
         </h:form>
-        
-        
-        
+
+
+
         <br/>
         <br/>  
-        
+
         <h:dataTable
             var="caregiver"
             summary="List of all Caregivers"
             value="#{administratorManager.allCaregivers}"
             rules="all"
             cellpadding="4">
-            
+
             <f:facet name="header">
                 <h:outputText value="Caregivers" />
             </f:facet>            
@@ -171,9 +171,9 @@
                 </f:facet>
                 <h:outputText value="#{caregiver.email}" />
             </h:column>     
-            
-                     
-            
+
+
+
             <h:column>
                 <f:facet name="header">
                     <h:outputText value="Actions" />
@@ -192,26 +192,26 @@
                     </h:commandLink>
                 </h:form>
             </h:column>                        
-               
+
         </h:dataTable>
 
         <br/>
-        
+
         <h:form>
             <h:commandLink value="New Caregiver" action="admin_caregivers_create?faces-redirect=true"/>
         </h:form>
-        
-        
+
+
         <br/>
         <br/>  
-        
+
         <h:dataTable
             var="trainingMaterial"
             summary="List of all Training Materials"
             value="#{administratorManager.allTrainingMaterials}"
             rules="all"
             cellpadding="5">
-            
+
             <f:facet name="header">
                 <h:outputText value="TrainingMaterials" />
             </f:facet>            
@@ -237,16 +237,16 @@
                 </f:facet>
                 <h:outputText value="#{trainingMaterial.tipoTM}" />
             </h:column>   
-            
+
             <h:column>
                 <f:facet name="header">
                     <h:outputText value="Link" />
                 </f:facet>
                 <h:outputText value="#{trainingMaterial.link}" />
             </h:column>  
-            
-                     
-            
+
+
+
             <h:column>
                 <f:facet name="header">
                     <h:outputText value="Actions" />
@@ -265,25 +265,25 @@
                     </h:commandLink>
                 </h:form>
             </h:column>                        
-               
+
         </h:dataTable>
 
         <br/>
-        
+
         <h:form>
             <h:commandLink value="New Training Material" action="admin_trainingmaterials_create?faces-redirect=true"/>
         </h:form>
-        
-        
-        
-        
+
+
+
+
         <br/>
         <br/> 
         <h:form>
-        <h:commandButton value="Logout" action="#{userManager.logout}" />
+            <h:commandButton value="Logout" action="#{userManager.logout}" />
         </h:form>
         <h:messages errorStyle="color: red" />
-        
+
     </h:body>
 </html>
 

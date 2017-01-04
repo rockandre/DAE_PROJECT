@@ -22,41 +22,35 @@ import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
-/**
- *
- * @author joaop
- */
 @Entity
 @Table(name = "PATIENTS")
 @NamedQueries({
     @NamedQuery(name = "getAllPatients",
-    query = "SELECT c FROM Patient c ORDER BY c.name")
+            query = "SELECT c FROM Patient c ORDER BY c.name")
 })
 @XmlRootElement
 public class Patient implements Serializable {
 
     @Id
     private int id;
-    @NotNull (message = "Patient name must not be empty")
+    @NotNull(message = "Patient name must not be empty")
     private String name;
     @ManyToOne
     @JoinColumn(name = "CAREGIVER_USERNAME")
     private Caregiver caregiver;
-    
+
     @ManyToMany(mappedBy = "patients")
     private List<Need> needs;
-    
-    
+
     @OneToMany(mappedBy = "patient", cascade = CascadeType.REMOVE)
     private List<Procedure> procedures;
-    
-    
-    public Patient(){
+
+    public Patient() {
         needs = new LinkedList<>();
         procedures = new LinkedList<>();
     }
-    
-    public Patient(int id, String name){
+
+    public Patient(int id, String name) {
         this.id = id;
         this.name = name;
         this.needs = new LinkedList<>();
@@ -71,7 +65,6 @@ public class Patient implements Serializable {
         this.procedures = procedures;
     }
 
-    
     public int getId() {
         return id;
     }
@@ -104,7 +97,7 @@ public class Patient implements Serializable {
     public void setNeeds(List<Need> needs) {
         this.needs = needs;
     }
-    
+
     public void addNeed(Need need) {
         needs.add(need);
     }
@@ -112,11 +105,11 @@ public class Patient implements Serializable {
     public void removeNeed(Need need) {
         needs.remove(need);
     }
-    
+
     public void removeCaregiver() {
         this.caregiver = null;
     }
-    
+
     public void addProcedure(Procedure procedure) {
         procedures.add(procedure);
     }
@@ -124,12 +117,4 @@ public class Patient implements Serializable {
     public void removeProcedure(Procedure procedure) {
         procedures.remove(procedure);
     }
-/*
-    @Override
-    public String toString() {
-        return "Id: " + id + ", Name: " + name;
-    }
-    
-    
-    */
 }

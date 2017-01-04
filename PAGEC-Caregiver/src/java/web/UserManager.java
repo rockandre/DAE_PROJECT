@@ -8,48 +8,41 @@ package web;
 import java.io.Serializable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.ejb.Stateless;
-import javax.ejb.LocalBean;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-/**
- *
- * @author joaop
- */
 @ManagedBean
 @SessionScoped
 public class UserManager implements Serializable {
-    
+
     private String username;
     private String password;
-    
+
     public boolean loginFlag = true;
     private static final Logger logger = Logger.getLogger("web.UserManager");
-    
+
     public String login() {
         FacesContext context = FacesContext.getCurrentInstance();
-        HttpServletRequest request =
-        (HttpServletRequest) context.getExternalContext().getRequest();
+        HttpServletRequest request
+                = (HttpServletRequest) context.getExternalContext().getRequest();
         try {
-        request.login(this.username, this.password);
+            request.login(this.username, this.password);
         } catch (ServletException e) {
-        logger.log(Level.WARNING, e.getMessage());
-        return "error?faces-redirect=true";
-       }
-        if(isUserInRole("Administrator")){
-        return "/faces/invalidRole?faces-redirect=true";
+            logger.log(Level.WARNING, e.getMessage());
+            return "error?faces-redirect=true";
         }
-        if(isUserInRole("HealthcareProf")){
-        return "/faces/invalidRole?faces-redirect=true";
+        if (isUserInRole("Administrator")) {
+            return "/faces/invalidRole?faces-redirect=true";
         }
-        if(isUserInRole("Caregiver")){
-        return "/faces/caregiver/caregiver_index?faces-redirect=true";
+        if (isUserInRole("HealthcareProf")) {
+            return "/faces/invalidRole?faces-redirect=true";
+        }
+        if (isUserInRole("Caregiver")) {
+            return "/faces/caregiver/caregiver_index?faces-redirect=true";
         }
         return "error?faces-redirect=true";
     }
@@ -58,7 +51,7 @@ public class UserManager implements Serializable {
         FacesContext context = FacesContext.getCurrentInstance();
         // remove data from beans:
         for (String bean : context.getExternalContext().getSessionMap().keySet()) {
-        context.getExternalContext().getSessionMap().remove(bean);
+            context.getExternalContext().getSessionMap().remove(bean);
         }
         // destroy session:
         HttpSession session = (HttpSession) context.getExternalContext().getSession(false);
@@ -67,25 +60,24 @@ public class UserManager implements Serializable {
         return "/index_login?faces-redirect=true";
     }
 
-    public String clearLogin(){
-        if(isSomeUserAuthenticated()){
-          logout();
+    public String clearLogin() {
+        if (isSomeUserAuthenticated()) {
+            logout();
         }
-    return "index_login.xhtml?faces-redirect=true";
-}
-    
-    public boolean isUserInRole(String role) {
-        return (isSomeUserAuthenticated() &&
-        FacesContext.getCurrentInstance().getExternalContext().isUserInRole(role));
+        return "index_login.xhtml?faces-redirect=true";
     }
-    
+
+    public boolean isUserInRole(String role) {
+        return (isSomeUserAuthenticated()
+                && FacesContext.getCurrentInstance().getExternalContext().isUserInRole(role));
+    }
+
     public boolean isSomeUserAuthenticated() {
-        return FacesContext.getCurrentInstance().getExternalContext().getUserPrincipal()!=null;
+        return FacesContext.getCurrentInstance().getExternalContext().getUserPrincipal() != null;
     }
 
     // Add business logic below. (Right-click in editor and choose
     // "Insert Code > Add Business Method")
-
     public String getUsername() {
         return username;
     }
@@ -109,6 +101,5 @@ public class UserManager implements Serializable {
     public void setLoginFlag(boolean loginFlag) {
         this.loginFlag = loginFlag;
     }
-    
-    
+
 }

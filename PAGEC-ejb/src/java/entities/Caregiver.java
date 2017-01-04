@@ -17,13 +17,10 @@ import javax.persistence.OneToMany;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
-/**
- *
- * @author joaop
- */
 @Entity
 @NamedQueries({
-    @NamedQuery(name = "getAllCaregivers", query = "SELECT t FROM Caregiver t ORDER BY t.name"),
+    @NamedQuery(name = "getAllCaregivers", query = "SELECT t FROM Caregiver t ORDER BY t.name")
+    ,
     @NamedQuery(name = "searchCaregivers", query = "SELECT t FROM Caregiver t WHERE t.name LIKE :name")
 })
 @XmlRootElement
@@ -31,10 +28,10 @@ public class Caregiver extends User implements Serializable {
 
     @OneToMany(mappedBy = "caregiver", cascade = CascadeType.REMOVE)
     private List<Patient> patients;
-    
+
     @OneToMany(mappedBy = "caregiver", cascade = CascadeType.REMOVE)
     private List<Procedure> procedures; //procedimentos que aplicou!
-    
+
     public Caregiver() {
         patients = new LinkedList<>();
         procedures = new LinkedList<>();
@@ -51,7 +48,6 @@ public class Caregiver extends User implements Serializable {
         return patients;
     }
 
-    
     public void setPatients(List<Patient> patients) {
         this.patients = patients;
     }
@@ -63,9 +59,7 @@ public class Caregiver extends User implements Serializable {
     public void setProcedures(List<Procedure> procedures) {
         this.procedures = procedures;
     }
-    
-    
-    
+
     public void addPatient(Patient patient) {
         patients.add(patient);
     }
@@ -73,7 +67,7 @@ public class Caregiver extends User implements Serializable {
     public void removePatient(Patient patient) {
         patients.remove(patient);
     }
-    
+
     public void addProcedure(Procedure procedure) {
         procedures.add(procedure);
     }
@@ -81,5 +75,5 @@ public class Caregiver extends User implements Serializable {
     public void removeProcedure(Procedure procedure) {
         procedures.remove(procedure);
     }
-    
+
 }

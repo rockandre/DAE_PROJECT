@@ -11,13 +11,10 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
-/**
- *
- * @author joaop
- */
 @XmlRootElement(name = "Procedure")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class ProcedureDTO implements Serializable{
+public class ProcedureDTO implements Serializable {
+
     int id;
     Date date;
     int patientId;
@@ -41,11 +38,7 @@ public class ProcedureDTO implements Serializable{
         this.caregiverName = caregiverName;
     }
 
-    
-
-    
-
-    public void reset(){
+    public void reset() {
         setId(0);
         setDate(null);
         setCaregiverUsername(null);
@@ -120,7 +113,4 @@ public class ProcedureDTO implements Serializable{
         this.caregiverName = caregiverName;
     }
 
-    
-    
-    
 }

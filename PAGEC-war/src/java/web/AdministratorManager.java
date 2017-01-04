@@ -20,15 +20,12 @@ import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIInput;
 import javax.faces.component.UIParameter;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
 
 @ManagedBean
 @SessionScoped
@@ -53,20 +50,16 @@ public class AdministratorManager {
     private CaregiverDTO newCaregiver;
     private TrainingMaterialDTO currentTrainingMaterial;
     private TrainingMaterialDTO newTrainingMaterial;
-    
-    //@ManagedProperty("#{userManager}")
-    //private UserManager userManager;
-    
-    
+
     private UIComponent component;
     private final String baseUri = "http://localhost:8080/PAGEC-war/webapi";
+
     public AdministratorManager() {
         newAdministrator = new AdministratorDTO();
-        newHealthcareProf= new HealthcareProfDTO();
-        newCaregiver= new CaregiverDTO();
+        newHealthcareProf = new HealthcareProfDTO();
+        newCaregiver = new CaregiverDTO();
         newTrainingMaterial = new TrainingMaterialDTO();
-        
-        
+
     }
 
     //ADMINISTRATORS
@@ -78,7 +71,7 @@ public class AdministratorManager {
         }
         return null;
     }
-    
+
     public String createAdministrator() {
         try {
             administratorBean.create(
@@ -94,7 +87,7 @@ public class AdministratorManager {
         }
         return null;
     }
-    
+
     public String updateAdministrator() {
         try {
             administratorBean.update(
@@ -111,7 +104,7 @@ public class AdministratorManager {
         }
         return "admin_administrators_update";
     }
-    
+
     public void removeAdministrator(ActionEvent event) {
         try {
             UIParameter param = (UIParameter) event.getComponent().findComponent("administratorUsername");
@@ -123,8 +116,7 @@ public class AdministratorManager {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
         }
     }
-    
-    
+
     //HEALTHCAREPROFS
     public List<HealthcareProfDTO> getAllHealthcareProfs() {
         try {
@@ -134,7 +126,7 @@ public class AdministratorManager {
         }
         return null;
     }
-    
+
     public String createHealthcareProf() {
         try {
             healthcareProfBean.create(
@@ -150,7 +142,7 @@ public class AdministratorManager {
         }
         return null;
     }
-    
+
     public String updateHealthcareProf() {
         try {
             healthcareProfBean.update(
@@ -167,7 +159,7 @@ public class AdministratorManager {
         }
         return "admin_healthcareprofs_update";
     }
-    
+
     public void removeHealthcareProf(ActionEvent event) {
         try {
             UIParameter param = (UIParameter) event.getComponent().findComponent("healthcareProfUsername");
@@ -179,8 +171,7 @@ public class AdministratorManager {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
         }
     }
-    
-    
+
     //CAREGIVERS
     public List<CaregiverDTO> getAllCaregivers() {
         try {
@@ -190,7 +181,7 @@ public class AdministratorManager {
         }
         return null;
     }
-    
+
     public String createCaregiver() {
         try {
             caregiverBean.create(
@@ -206,7 +197,7 @@ public class AdministratorManager {
         }
         return null;
     }
-    
+
     public String updateCaregiver() {
         try {
             caregiverBean.update(
@@ -223,7 +214,7 @@ public class AdministratorManager {
         }
         return "admin_caregivers_update";
     }
-    
+
     public void removeCaregiver(ActionEvent event) {
         try {
             UIParameter param = (UIParameter) event.getComponent().findComponent("caregiverUsername");
@@ -235,8 +226,7 @@ public class AdministratorManager {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
         }
     }
-    
-    
+
     //TRAINING MATERIALS
     public List<TrainingMaterialDTO> getAllTrainingMaterials() {
         try {
@@ -246,7 +236,7 @@ public class AdministratorManager {
         }
         return null;
     }
-    
+
     public String createTrainingMaterial() {
         try {
             trainingMaterialBean.create(
@@ -262,7 +252,7 @@ public class AdministratorManager {
         }
         return null;
     }
-    
+
     public String updateTrainingMaterial() {
         try {
             trainingMaterialBean.update(
@@ -279,11 +269,11 @@ public class AdministratorManager {
         }
         return "admin_trainingmaterials_update";
     }
-    
+
     public void removeTrainingMaterial(ActionEvent event) {
         try {
             UIParameter param = (UIParameter) event.getComponent().findComponent("trainingMaterialId");
-            int id  = Integer.parseInt(param.getValue().toString());
+            int id = Integer.parseInt(param.getValue().toString());
             trainingMaterialBean.remove(id);
         } catch (EntityDoesNotExistsException | MyConstraintViolationException e) {
             FacesExceptionHandler.handleException(e, e.getMessage(), logger);
@@ -291,9 +281,8 @@ public class AdministratorManager {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
         }
     }
-    
-                    //NEEDS
-    
+
+    //NEEDS
     public List<NeedDTO> getEnrolledNeeds() {
         try {
             return trainingMaterialBean.getEnrolledNeeds(currentTrainingMaterial.getId());
@@ -319,7 +308,7 @@ public class AdministratorManager {
     public void enrollNeed(ActionEvent event) {
         try {
             UIParameter param = (UIParameter) event.getComponent().findComponent("needId");
-            int id  = Integer.parseInt(param.getValue().toString());
+            int id = Integer.parseInt(param.getValue().toString());
             needBean.enrollTrainingMaterial(id, currentTrainingMaterial.getId());
         } catch (EntityDoesNotExistsException | EntityEnrolledException e) {
             FacesExceptionHandler.handleException(e, e.getMessage(), logger);
@@ -331,7 +320,7 @@ public class AdministratorManager {
     public void unrollNeed(ActionEvent event) {
         try {
             UIParameter param = (UIParameter) event.getComponent().findComponent("needId");
-            int id  = Integer.parseInt(param.getValue().toString());
+            int id = Integer.parseInt(param.getValue().toString());
             needBean.unrollTrainingMaterial(id, currentTrainingMaterial.getId());
         } catch (EntityDoesNotExistsException e) {
             FacesExceptionHandler.handleException(e, e.getMessage(), logger);
@@ -339,10 +328,8 @@ public class AdministratorManager {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
         }
     }
-    
-    
-    // GETTERS E SETTERS
 
+    // GETTERS E SETTERS
     public AdministratorDTO getCurrentAdministrator() {
         return currentAdministrator;
     }
@@ -398,10 +385,7 @@ public class AdministratorManager {
     public void setNewTrainingMaterial(TrainingMaterialDTO newTrainingMaterial) {
         this.newTrainingMaterial = newTrainingMaterial;
     }
-    
-    
-    
-    
+
     public UIComponent getComponent() {
         return component;
     }
@@ -422,10 +406,6 @@ public class AdministratorManager {
         return TRMAT.values();
     }
 
-
-    
-    
-    
     ///////////// VALIDATORS ////////////////////////
     public void validateUsername(FacesContext context, UIComponent toValidate, Object value) {
         try {

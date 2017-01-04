@@ -10,10 +10,6 @@ import java.io.Serializable;
 import javax.persistence.Entity;
 import javax.persistence.NamedQuery;
 
-/**
- *
- * @author joaop
- */
 @Entity
 @NamedQuery(name = "getAllHealthcareProfs", query = "SELECT t FROM HealthcareProf t ORDER BY t.name")
 public class HealthcareProf extends User implements Serializable {
